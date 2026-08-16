@@ -183,13 +183,14 @@
   .dot.active{ background:var(--rose); width:20px; border-radius:4px;}
 
   .mute-btn{
-    position:fixed; bottom:26px; left:18px; z-index:110;
+    position:fixed; top:16px; right:16px; z-index:110;
+    width:38px; height:38px; padding:0; border-radius:50%;
     background:rgba(12,17,20,.45); border:1px solid var(--line); color:var(--cream);
-    height:38px; padding:0 12px; border-radius:8px;
-    font:inherit; font-size:8px; letter-spacing:.16em; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
     cursor:pointer; opacity:0; pointer-events:none;
     transition:opacity .45s ease, border-color .2s, background .2s;
   }
+  .mute-btn svg{ width:18px; height:18px; fill:currentColor; display:block; }
   .lock.boarded ~ .mute-btn{ opacity:1; pointer-events:auto; }
   .mute-btn:hover{ border-color:var(--rose); background:rgba(255,255,255,0.08); }
   .mute-btn.is-muted{ opacity:.7; }
@@ -279,6 +280,7 @@
     box-shadow:0 12px 32px rgba(0,0,0,.28);
   }
   .cp-card.show{ opacity:1; transform:translateY(0); }
+  .cp-card-mid{ display:flex; flex-direction:column; }
   .dest-top{
     display:flex; justify-content:space-between; align-items:flex-end;
     padding:10px 12px 8px; border-bottom:1px dashed rgba(28,36,41,.2);
@@ -482,32 +484,38 @@
 
   /* flight report */
   .slide[data-i="7"]{
-    padding:4vh 4vw 12vh; align-items:center;
+    padding:6vh 4vw 96px; align-items:center; justify-content:center;
   }
-  .slide[data-i="7"] .if-head{ max-width:520px; }
-  .slide[data-i="7"] .ife-panel{ max-height:72vh; overflow:auto; position:relative; }
-  .rpt-panel .arrived-stamp{ top:12px; right:12px; }
+  .slide[data-i="7"] .if-head{ max-width:520px; margin-bottom:10px; }
+  .slide[data-i="7"] .ife-panel{
+    max-height:none; overflow:visible; position:relative;
+    padding:12px 14px 10px;
+  }
+  .rpt-panel .arrived-stamp{
+    top:8px; right:8px; width:58px; height:58px; font-size:8px;
+  }
   .rpt-row{
-    display:flex; justify-content:space-between; gap:12px;
-    margin:8px 0; align-items:flex-start;
+    display:flex; justify-content:space-between; gap:10px;
+    margin:3px 0; align-items:flex-start;
   }
   .rpt-row > span:last-child{ text-align:right; }
-  .rpt-k{ font-size:8px; letter-spacing:.14em; opacity:.45; margin-bottom:2px; }
-  .rpt-v{ font-size:13px; font-weight:700; }
-  .rpt-d{ font-size:12px; opacity:.55; margin-top:1px; }
+  .rpt-k{ font-size:7px; letter-spacing:.12em; opacity:.45; margin-bottom:1px; }
+  .rpt-v{ font-size:12px; font-weight:700; line-height:1.2; }
+  .rpt-d{ font-size:11px; opacity:.55; margin-top:0; line-height:1.25; }
   .rpt-next{
-    background:#fff; border-radius:8px; padding:12px 14px; margin:2px 0 4px;
+    background:#fff; border-radius:8px; padding:8px 10px; margin:0;
   }
   .rpt-route{
     display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
-    margin-top:6px;
+    margin-top:2px;
   }
-  .rpt-route .dest-code{ font-size:22px; }
-  .rpt-plane{ opacity:.4; font-size:14px; padding-bottom:4px; }
+  .rpt-route .dest-code{ font-size:18px; }
+  .rpt-plane{ opacity:.4; font-size:13px; padding-bottom:2px; }
   .rpt-to{ text-align:right; }
-  .rpt-next .rpt-d{ margin-top:8px; }
-  .rpt-letter{ font-size:13px; line-height:1.55; opacity:.82; }
-  .rpt-panel > .ife-k{ padding-right:72px; }
+  .rpt-next .rpt-d{ margin-top:4px; }
+  .rpt-letter{ font-size:12px; line-height:1.35; opacity:.82; margin:2px 0 0; }
+  .rpt-panel > .ife-k{ padding-right:64px; margin-bottom:2px; }
+  .rpt-panel .df-dash{ margin:6px 0; }
 
   .confetti{ position:fixed; top:-10px; width:8px; height:8px; z-index:10; pointer-events:none; }
 
@@ -535,9 +543,10 @@
   }
   .gate-hint.err{ color:#c45c4a; letter-spacing:.08em; text-transform:none; }
   .bp-scene{
-    perspective:1400px;
+    perspective:none;
     width:min(520px, 100%);
   }
+  .lock.boarded .bp-scene{ perspective:1400px; }
   .bp{
     display:grid; width:100%;
     background:transparent; box-shadow:none; overflow:visible;
@@ -602,7 +611,14 @@
   .bp-city{ font-size:11px; opacity:.55; margin-top:3px; }
   .bp-plane{ font-size:18px; opacity:.45; flex:1; text-align:center; }
   .bp-flight{ margin:4px 0 12px; }
-  .lock-dots{ display:flex; gap:8px; }
+  .lock-dots{ display:flex; gap:8px; position:relative; }
+  .lock-entry{ position:relative; }
+  .lock-input{
+    position:absolute; inset:0; width:100%; height:100%;
+    opacity:.01; border:0; background:transparent; padding:0; margin:0;
+    font-size:16px; color:transparent; caret-color:transparent;
+    -webkit-user-select:text; user-select:text;
+  }
   .lock-dots .ld{
     width:32px; height:36px;
     border:none; border-bottom:2px solid #1c2429;
@@ -700,7 +716,8 @@
     .slide[data-i="2"]{
       justify-content:flex-start;
       overflow:auto;
-      padding:3vh 4vw 12vh;
+      padding:8vh 4vw 96px;
+      -webkit-overflow-scrolling:touch;
     }
     .slide[data-i="2"] .if-head{ max-width:520px; }
     .road-wrap{
@@ -709,12 +726,30 @@
       gap:12px;
     }
     .road-left{ flex:none; width:100%; }
-    .road-right{ flex:none; max-width:none; width:100%; }
-    .road-frame{ padding-top:62%; height:auto; }
-    .slide[data-i="2"] .cp-card-img{
-      width:min(calc(100% - 16px), 168px);
+    .road-right{ flex:none; max-width:none; width:100%; align-items:flex-start; }
+    .road-frame{ padding-top:48%; height:auto; }
+    .slide[data-i="2"] .cp-card-mid{
+      flex-direction:row; align-items:stretch; gap:10px;
+      padding:8px 10px 0;
     }
-    .mute-btn{ left:12px; bottom:22px; padding:0 10px; }
+    .slide[data-i="2"] .cp-card-img{
+      width:44%; max-width:168px; min-width:120px;
+      margin:0; flex:0 0 auto;
+    }
+    .slide[data-i="2"] .cp-card-body{
+      flex:1; min-width:0; padding:2px 2px 8px 0;
+    }
+    .slide[data-i="2"] .dest-meta{
+      flex-direction:column; gap:6px; margin-bottom:8px;
+    }
+    .slide[data-i="2"] .arrived-stamp{
+      top:auto; bottom:36px; left:18px; right:auto;
+      width:52px; height:52px; font-size:8px;
+    }
+    .slide[data-i="7"]{
+      padding:8vh 4vw 96px;
+      justify-content:center;
+    }
   }
 </style>
 </head>
@@ -753,7 +788,10 @@
       </div>
       <div class="bp-flight">
         <div class="bp-k">FLIGHT NO.</div>
-        <div class="lock-dots" id="lockDots"></div>
+        <div class="lock-entry">
+          <div class="lock-dots" id="lockDots"></div>
+          <input id="lockInput" class="lock-input" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="done" aria-label="Flight code">
+        </div>
       </div>
       <div class="bp-meta">
         <div>
@@ -882,21 +920,23 @@
             <div class="bp-k">DESTINATION</div>
             <div class="dest-code" id="cpCardCode"></div>
           </div>
-          <div class="cp-card-img" id="cpCardImg"></div>
-          <div class="cp-card-body">
-            <div class="dest-meta">
-              <div>
-                <div class="bp-k">CITY</div>
-                <div class="cp-card-title" id="cpCardTitle"></div>
+          <div class="cp-card-mid">
+            <div class="cp-card-img" id="cpCardImg"></div>
+            <div class="cp-card-body">
+              <div class="dest-meta">
+                <div>
+                  <div class="bp-k">CITY</div>
+                  <div class="cp-card-title" id="cpCardTitle"></div>
+                </div>
+                <div>
+                  <div class="bp-k">DATE</div>
+                  <div class="cp-card-when" id="cpCardWhen"></div>
+                </div>
               </div>
-              <div>
-                <div class="bp-k">DATE</div>
-                <div class="cp-card-when" id="cpCardWhen"></div>
+              <div class="cap-box" id="cpCapBox">
+                <div class="cp-card-cap" id="cpCardCap"></div>
+                <button type="button" class="cap-more">อ่านต่อ</button>
               </div>
-            </div>
-            <div class="cap-box" id="cpCapBox">
-              <div class="cp-card-cap" id="cpCardCap"></div>
-              <button type="button" class="cap-more">อ่านต่อ</button>
             </div>
           </div>
           <div class="dest-bar"></div>
@@ -1018,7 +1058,7 @@
   <source src="music/cabin.mp3" type="audio/mpeg">
   <source src="music/cabin.m4a" type="audio/mp4">
 </audio>
-<button type="button" class="mute-btn" id="muteBtn" onclick="toggleCabinMute()">CABIN ON</button>
+<button type="button" class="mute-btn" id="muteBtn" onclick="toggleCabinMute()" aria-label="Mute cabin audio"></button>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <script>
@@ -1032,6 +1072,7 @@ const startDate = new Date('2025-08-17T00:00:00');
 let lockBuffer = '';
 let lockBusy = false;
 const lockDotsWrap = document.getElementById('lockDots');
+const lockInput = document.getElementById('lockInput');
 const boardingPass = document.getElementById('boardingPass');
 const stubFlight = document.getElementById('stubFlight');
 const gateHint = document.querySelector('.gate-hint');
@@ -1055,6 +1096,20 @@ function renderLockDots(){
     d.textContent = lockBuffer[i] || '';
   });
   if(stubFlight) stubFlight.textContent = (lockBuffer + '------').slice(0, 6);
+  if(lockInput && lockInput.value !== lockBuffer) lockInput.value = lockBuffer;
+}
+if(lockInput){
+  lockInput.addEventListener('input', ()=>{
+    if(lockBusy || document.getElementById('lock').classList.contains('boarded')) return;
+    const v = lockInput.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0, PASSCODE.length);
+    if(lockInput.value !== v) lockInput.value = v;
+    lockBuffer = v;
+    renderLockDots();
+    if(lockBuffer.length === PASSCODE.length){
+      lockBusy = true;
+      setTimeout(checkPasscode, 180);
+    }
+  });
 }
 function lockPress(k){
   if(lockBusy || document.getElementById('lock').classList.contains('boarded')) return;
@@ -1076,6 +1131,7 @@ function lockFail(msg){
     boardingPass.classList.remove('shake');
     lockBuffer = '';
     lockBusy = false;
+    if(lockInput) lockInput.value = '';
     renderLockDots();
   }, 450);
 }
@@ -1084,6 +1140,7 @@ function lockOk(){
   lockDotsWrap.classList.add('success');
   boardingPass.classList.add('flipped');
   document.getElementById('lock').classList.add('boarded');
+  if(lockInput){ lockInput.blur(); lockInput.readOnly = true; }
   setTimeout(renderCounter, 420);
   startCabinAudio();
 }
@@ -1091,10 +1148,13 @@ const cabinAudio = document.getElementById('cabinAudio');
 let cabinMuted = false;
 function syncMuteBtn(){
   const btn = document.getElementById('muteBtn');
-  btn.textContent = cabinMuted ? 'CABIN MUTE' : 'CABIN ON';
+  btn.innerHTML = cabinMuted
+    ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>'
+    : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zm11.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.74 2.5-2.26 2.5-4.02zM14 5.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
   btn.classList.toggle('is-muted', cabinMuted);
   btn.setAttribute('aria-label', cabinMuted ? 'Unmute cabin audio' : 'Mute cabin audio');
 }
+syncMuteBtn();
 function startCabinAudio(){
   cabinAudio.volume = 0.4;
   cabinAudio.muted = cabinMuted;
@@ -1140,6 +1200,7 @@ boardingPass.addEventListener('click', ()=>{
   setTimeout(()=>{ flipBusy = false; }, 900);
 });
 document.addEventListener('keydown', e=>{
+  if(e.target === lockInput) return;
   if(document.getElementById('lock').classList.contains('boarded')) return;
   if(e.ctrlKey || e.metaKey || e.altKey) return;
   if(/^[a-zA-Z0-9]$/.test(e.key)){
