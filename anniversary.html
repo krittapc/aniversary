@@ -1066,7 +1066,7 @@
 // แก้รหัสผ่านตรงนี้
 const PASSCODE = 'SK1708';
 const TEST_PASSCODE = '111111';
-const boardingAt = new Date('2026-08-17T22:00:00+07:00');
+const boardingAt = new Date('2026-08-16T22:00:00+07:00');
 // แก้วันที่เริ่มครบรอบตรงนี้
 const startDate = new Date('2025-08-17T00:00:00');
 let lockBuffer = '';
@@ -1077,7 +1077,7 @@ const boardingPass = document.getElementById('boardingPass');
 const stubFlight = document.getElementById('stubFlight');
 const gateHint = document.querySelector('.gate-hint');
 (function fillPassTimes(){
-  document.getElementById('bpDate').textContent = '17 AUG 26';
+  document.getElementById('bpDate').textContent = '16 AUG 26';
   document.getElementById('bpBoard').textContent = '22:00';
   const now = new Date();
   let years = now.getFullYear() - startDate.getFullYear();
@@ -1175,7 +1175,7 @@ function checkPasscode(){
   }
   if(lockBuffer === PASSCODE){
     if(Date.now() < boardingAt.getTime()){
-      lockFail('ยังไม่ถึงเวลาขึ้นเครื่อง · 17 AUG 26 22:00');
+      lockFail('ยังไม่ถึงเวลาขึ้นเครื่อง · 16 AUG 26 22:00');
       return;
     }
     lockOk();
