@@ -1,0 +1,7 @@
+.cursor/
+.tools/
+debug-*.log
+Picture/
+Travel/
+*.heic
+*.HEIC

@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ครบรอบของเรา</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root{
+    --ink:#36454f;
+    --plum:#46545f;
+    --plum-deep:#2b343b;
+    --rose:#8fa3ad;
+    --rose-soft:#b9c4ca;
+    --gold:#d3d3d3;
+    --cream:#ffffff;
+    --line: rgba(255,255,255,0.16);
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--plum-deep);
+    color:var(--cream);
+    font-family:'DejaVu Sans', Arial, Helvetica, sans-serif;
+    overflow:hidden;
+    position:relative;
+  }
+  .display{ font-family:'DejaVu Sans', Arial, Helvetica, sans-serif; font-weight:700; }
+
+  /* ambient drifting hearts */
+  .petals{position:fixed; inset:0; pointer-events:none; z-index:0;}
+  .petal{
+    position:absolute; top:-40px; font-size:16px; color:var(--rose);
+    opacity:.35; animation:fall linear infinite;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(180deg); }
+  }
+
+  .deck{
+    position:relative; z-index:1;
+    height:100vh; width:100vw;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .slide{
+    position:absolute; inset:0;
+    display:none;
+    flex-direction:column; align-items:center; justify-content:center;
+    padding:8vh 6vw;
+    text-align:center;
+    animation:rise .6s ease;
+  }
+  .slide.active{ display:flex; }
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .eyebrow{
+    letter-spacing:.25em; text-transform:uppercase; font-size:12px;
+    color:var(--rose-soft); margin-bottom:18px; opacity:.85;
+  }
+  h1{ font-size:clamp(32px,6vw,64px); font-weight:600; margin:0 0 12px; line-height:1.1;}
+  h2{ font-size:clamp(24px,4vw,38px); font-weight:600; margin:0 0 20px; }
+  p.sub{ font-size:clamp(14px,2vw,18px); color:var(--cream); opacity:.75; max-width:560px; margin:0 auto; }
+
+  /* welcome aboard */
+  .slide[data-i="0"]{ padding:6vh 5vw 12vh; }
+  .slide[data-i="1"]{
+    padding:4vh 4vw 12vh; align-items:center;
+  }
+  .slide[data-i="1"] .if-head{ max-width:520px; }
+  .pre-track{
+    width:100%; max-width:280px;
+    touch-action:pan-y;
+  }
+  .pre-card{
+    display:none;
+    width:100%;
+    background:#f3eee4; color:#1c2429;
+    border-radius:14px; overflow:hidden; text-align:left; position:relative;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  .pre-card.on{ display:block; }
+  .pre-track[data-dir="next"] .pre-card.on{ animation:preNext .4s ease; }
+  .pre-track[data-dir="prev"] .pre-card.on{ animation:prePrev .4s ease; }
+  @keyframes preNext{
+    from{ opacity:0; transform:translateX(40px); }
+    to{ opacity:1; transform:translateX(0); }
+  }
+  @keyframes prePrev{
+    from{ opacity:0; transform:translateX(-40px); }
+    to{ opacity:1; transform:translateX(0); }
+  }
+  .pre-card .dest-top,
+  .pre-card .cp-card-body{ padding-left:12px; padding-right:12px; }
+  .pre-card .dest-top .bp-k{
+    font-weight:700; opacity:1; color:#1c2429; font-size:9px;
+  }
+  .pre-card .cp-card-img{
+    width:min(calc(100% - 16px), calc(42vh * 3 / 4));
+    max-height:none;
+    aspect-ratio:3/4;
+    background-size:contain;
+    background-position:center;
+    background-repeat:no-repeat;
+  }
+  .pre-card .cp-card-title{ max-width:150px; }
+  .pre-card:has(.cap-box.open) .cp-card-img{
+    width:min(calc(100% - 16px), calc(22vh * 3 / 4));
+  }
+  .pre-card .arrived-stamp{
+    width:88px; height:88px; font-size:7px; letter-spacing:.05em;
+    text-align:center; line-height:1.2; padding:8px;
+  }
+  .pre-hint{
+    margin-top:14px;
+    font-size:10px; letter-spacing:.16em; font-weight:700;
+    color:rgba(243,238,228,.45);
+  }
+  .wa-head{
+    width:100%; max-width:520px;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:16px; text-align:left;
+  }
+  .wa-head .bp-airline{ color:#d4b8b0; }
+  .wa-ticket{
+    width:100%; max-width:520px;
+    background:#f3eee4; color:#1c2429;
+    border-radius:14px; overflow:hidden; text-align:left;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  .wa-top{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    padding:14px 18px 10px; border-bottom:1px solid rgba(28,36,41,.12);
+  }
+  .wa-top .bp-airline{ color:#6a3b32; }
+  .wa-welcome{ font-size:11px; letter-spacing:.18em; font-weight:700; opacity:.7; }
+  .wa-body{ padding:16px 18px 8px; }
+  .wa-pax .bp-v{ font-size:15px; line-height:1.4; }
+  .wa-route{
+    display:flex; align-items:center; justify-content:space-between;
+    margin:16px 0 14px; gap:10px;
+  }
+  .counter-wrap{
+    display:flex; gap:0; justify-content:space-between;
+    border-top:1px dashed rgba(28,36,41,.2); padding-top:12px;
+  }
+  .counter-box{
+    min-width:0; padding:0; background:none; border:none; border-radius:0;
+  }
+  .counter-box .lbl{
+    font-size:8px; letter-spacing:.16em; text-transform:uppercase;
+    opacity:.45; color:#1c2429; margin:0 0 4px;
+  }
+  .counter-box .num{
+    font-family:'DejaVu Sans',Arial,sans-serif; font-weight:700;
+    font-size:clamp(28px,5vw,40px); color:#1c2429; line-height:1;
+  }
+  .counter-box .unit{ font-size:11px; letter-spacing:.12em; opacity:.5; margin-top:4px; font-weight:700; }
+
+  /* nav */
+  .nav{
+    position:fixed; bottom:26px; left:0; right:0;
+    display:flex; align-items:center; justify-content:center; gap:18px;
+    z-index:110;
+    opacity:0; pointer-events:none;
+    transition:opacity .45s ease;
+  }
+  .lock.boarded ~ .nav{
+    opacity:1; pointer-events:auto;
+  }
+  .nav button{
+    background:none; border:1px solid var(--line); color:var(--cream);
+    width:38px; height:38px; border-radius:50%; cursor:pointer;
+    font-size:16px; transition:.2s;
+  }
+  .nav button:hover{ background:rgba(255,255,255,0.08); border-color:var(--rose);}
+  .nav button:disabled{ opacity:.28; cursor:default; }
+  .nav button:disabled:hover{ background:none; border-color:var(--line);}
+  .dots{ display:flex; gap:8px; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--line); cursor:pointer; transition:.2s;}
+  .dot.active{ background:var(--rose); width:20px; border-radius:4px;}
+
+  .mute-btn{
+    position:fixed; bottom:26px; left:18px; z-index:110;
+    background:rgba(12,17,20,.45); border:1px solid var(--line); color:var(--cream);
+    height:38px; padding:0 12px; border-radius:8px;
+    font:inherit; font-size:8px; letter-spacing:.16em; font-weight:700;
+    cursor:pointer; opacity:0; pointer-events:none;
+    transition:opacity .45s ease, border-color .2s, background .2s;
+  }
+  .lock.boarded ~ .mute-btn{ opacity:1; pointer-events:auto; }
+  .mute-btn:hover{ border-color:var(--rose); background:rgba(255,255,255,0.08); }
+  .mute-btn.is-muted{ opacity:.7; }
+
+  /* timeline */
+  .timeline{
+    display:flex; flex-direction:column; gap:0; max-width:520px; width:100%;
+    text-align:left; margin-top:10px; max-height:52vh; overflow:auto; padding-right:6px;
+  }
+  .tl-item{ display:flex; gap:16px; padding:14px 0; border-left:1px solid var(--line); padding-left:22px; position:relative;}
+  .tl-item::before{
+    content:''; position:absolute; left:-5px; top:20px; width:9px; height:9px; border-radius:50%; background:var(--rose);
+  }
+  .tl-date{ font-size:11px; letter-spacing:.1em; color:var(--gold); text-transform:uppercase; margin-bottom:4px;}
+  .tl-text{ font-size:15px; opacity:.85; }
+
+  /* journey globe — in-flight map */
+  .slide[data-i="2"]{
+    padding:4vh 4vw 12vh; align-items:center;
+  }
+  .if-head{
+    width:100%; max-width:900px;
+    display:flex; justify-content:space-between; align-items:flex-end; gap:12px;
+    border-bottom:1px solid var(--line); padding-bottom:10px; margin-bottom:14px;
+    text-align:left;
+  }
+  .if-head .bp-airline{ color:#d4b8b0; letter-spacing:.28em; }
+  .if-map{ font-size:13px; font-weight:700; letter-spacing:.2em; }
+  .if-flight{
+    font-size:10px; letter-spacing:.16em; color:var(--rose-soft); opacity:.9;
+  }
+  .road-wrap{
+    width:100%; max-width:900px; display:flex; flex-direction:row; align-items:stretch; gap:16px;
+  }
+  .road-left{
+    flex:1 1 62%; min-width:0; display:flex; flex-direction:row; align-items:stretch; gap:10px;
+  }
+  .road-right{
+    flex:0 1 32%; min-width:0; max-width:260px; display:flex; align-items:stretch;
+  }
+  .road-frame{
+    position:relative; flex:1 1 auto; min-width:0; padding-top:68%;
+    border-radius:12px; border:1px solid rgba(243,238,228,.18);
+    background:radial-gradient(ellipse at 42% 38%, #243038 0%, #0c1114 72%);
+    overflow:hidden;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.35);
+  }
+  .if-screen-bar{
+    position:absolute; top:0; left:0; right:0; z-index:2;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 12px;
+    font-size:9px; letter-spacing:.16em; color:#f3eee4;
+    background:linear-gradient(to bottom, rgba(12,17,20,.78), transparent);
+    pointer-events:none;
+  }
+  #globeCanvas{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  .cp-card-img.is-empty{ display:none; }
+
+  .if-nav{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  }
+  .if-nav button{
+    background:rgba(243,238,228,.06); border:1px solid var(--line); color:#f3eee4;
+    width:52px; min-height:44px; border-radius:8px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    font-size:11px; letter-spacing:.12em; padding:6px 4px; transition:.2s;
+  }
+  .if-nav button span{ font-size:7px; opacity:.7; }
+  .if-nav button:hover{ border-color:#d4b8b0; background:rgba(243,238,228,.12); }
+  .if-nav button:disabled{ opacity:.28; cursor:default; }
+  .if-nav button:disabled:hover{ border-color:var(--line); background:rgba(243,238,228,.06); }
+  .if-legs{ display:flex; flex-direction:column; gap:5px; }
+  .if-leg{
+    font-size:8px; letter-spacing:.1em; font-weight:700;
+    color:rgba(243,238,228,.35); padding:3px 4px; border-radius:4px;
+    border:1px solid transparent;
+  }
+  .if-leg.active{
+    color:#1c2429; background:#f3eee4; border-color:#f3eee4;
+  }
+
+  .cp-card{
+    display:flex; flex-direction:column; width:100%;
+    background:#f3eee4; color:#1c2429; border-radius:12px; overflow:hidden;
+    opacity:0; transform:translateY(10px); transition:opacity .5s ease, transform .5s ease;
+    text-align:left; position:relative;
+    box-shadow:0 12px 32px rgba(0,0,0,.28);
+  }
+  .cp-card.show{ opacity:1; transform:translateY(0); }
+  .dest-top{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    padding:10px 12px 8px; border-bottom:1px dashed rgba(28,36,41,.2);
+  }
+  .dest-top .bp-k{ margin-bottom:0; color:rgba(28,36,41,.45); }
+  .dest-code{ font-size:20px; font-weight:700; letter-spacing:.06em; line-height:1; }
+  .cp-card-img{
+    width:min(calc(100% - 16px), calc(38vh * 3 / 4));
+    margin:8px auto 0; aspect-ratio:3/4;
+    border-radius:6px;
+    background-size:cover; background-position:center 78%;
+    background-color:#ddd6c8;
+  }
+  .cp-card-body{ padding:10px 12px 12px; }
+  .dest-meta{ display:flex; justify-content:space-between; gap:10px; margin-bottom:6px; }
+  .dest-meta .bp-k{ color:rgba(28,36,41,.4); }
+  .cp-card-when, .cp-card-title{
+    font-size:12px; font-weight:700; color:#1c2429; letter-spacing:0; text-transform:none; opacity:1; margin:0;
+  }
+  .cp-card-cap{ font-size:11px; opacity:.65; line-height:1.45; color:#1c2429; }
+  .cap-box .cp-card-cap{
+    display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3;
+    overflow:hidden;
+  }
+  .cap-box.open .cp-card-cap{
+    display:block; -webkit-line-clamp:unset; max-height:28vh; overflow:auto;
+  }
+  .cap-more{
+    display:none; margin-top:4px; padding:0; border:0; background:none;
+    font:inherit; font-size:9px; letter-spacing:.12em; font-weight:700;
+    color:#6a3b32; cursor:pointer;
+  }
+  .cap-box.long .cap-more{ display:inline-block; }
+  .dest-bar{
+    height:22px; margin:8px 12px 10px;
+    background:repeating-linear-gradient(
+      90deg, #1c2429 0 2px, transparent 2px 3px, #1c2429 3px 4px, transparent 4px 7px
+    );
+    opacity:.85;
+  }
+  .arrived-stamp{
+    position:absolute; right:14px; top:42%;
+    width:76px; height:76px; border-radius:50%;
+    border:2.5px solid #c45c4a; color:#c45c4a;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:700; letter-spacing:.12em;
+    transform:rotate(-14deg) scale(.85);
+    opacity:0; pointer-events:none;
+    background:rgba(243,238,228,.55);
+    transition:opacity .35s ease;
+  }
+  .arrived-stamp.show{ opacity:1; }
+
+  .mc-nav{
+    margin-top:20px; display:flex; align-items:center; gap:16px;
+  }
+  .mc-nav button{
+    background:none; border:1px solid var(--line); color:var(--cream);
+    width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:15px; transition:.2s;
+  }
+  .mc-nav button:hover{ border-color:var(--rose); background:rgba(255,255,255,0.08); }
+  .mc-nav button:disabled{ opacity:.3; cursor:default; }
+  .mc-nav button:disabled:hover{ border-color:var(--line); background:none; }
+  .mc-nav-vert{ flex-direction:column; gap:10px; margin-top:0; }
+  .mc-nav-vert .mc-dots{ flex-direction:column; max-width:none; }
+  .mc-dots{ display:flex; gap:6px; flex-wrap:wrap; max-width:200px; justify-content:center; }
+  .mc-dots .dot{ width:6px; height:6px; }
+  .mc-dots .dot.active{ background:var(--gold); width:16px; }
+
+  /* in-flight entertainment */
+  .slide[data-i="3"],
+  .slide[data-i="4"],
+  .slide[data-i="5"]{
+    padding:4vh 4vw 12vh; align-items:center;
+  }
+  .slide[data-i="3"] .if-head,
+  .slide[data-i="4"] .if-head,
+  .slide[data-i="5"] .if-head{ max-width:520px; }
+  .ife-panel{
+    width:100%; max-width:520px;
+    background:#f3eee4; color:#1c2429;
+    border-radius:14px; padding:16px 18px 14px;
+    text-align:left;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  .ife-panel .sub{
+    color:#1c2429; opacity:.72; margin:8px 0 14px; text-align:left; max-width:none;
+    font-size:14px;
+  }
+  .ife-k{ font-size:8px; letter-spacing:.16em; opacity:.45; margin-bottom:4px; }
+
+  /* cabin lottery scratch */
+  .lotto-lucky{
+    display:grid; grid-template-columns:1fr 1fr; gap:6px;
+    margin:8px 0 12px;
+  }
+  .lotto-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:6px;
+  }
+  .lotto-grid.locked{ opacity:.38; }
+  .lotto-cell{
+    position:relative; background:#fff; border-radius:6px; overflow:hidden;
+    text-align:center; border:1px solid rgba(28,36,41,.1);
+  }
+  .lotto-lucky .lotto-cell{ min-height:56px; }
+  .lotto-grid .lotto-cell{ min-height:48px; }
+  .lotto-num{
+    font-size:16px; font-weight:700; padding:10px 2px 1px; line-height:1;
+  }
+  .lotto-lucky .lotto-num{ font-size:20px; padding-top:14px; }
+  .lotto-prize{
+    font-size:8px; line-height:1.25; opacity:.5; padding:3px 3px 6px;
+  }
+  .slide[data-i="3"] .ife-panel,
+  .slide[data-i="4"] .ife-panel,
+  .slide[data-i="5"] .ife-panel{ max-height:72vh; overflow:auto; }
+  .lotto-cell canvas{
+    position:absolute; inset:0; width:100%; height:100%;
+    touch-action:none; cursor:crosshair;
+  }
+  .lotto-cell.win{ border-color:#c45c4a; background:rgba(196,92,74,.12); }
+  .lotto-cell.win .lotto-prize{ color:#6a3b32; opacity:1; font-weight:700; }
+  .lotto-status{
+    margin-top:12px; font-size:10px; letter-spacing:.12em; opacity:.5;
+  }
+
+  /* quiz */
+  .quiz-q{ font-size:14px; opacity:.8; margin:8px 0 12px; font-weight:700;}
+  .quiz-opts{ display:flex; flex-direction:column; gap:8px; width:100%; max-width:none;}
+  .quiz-opt{
+    background:#fff; border:1px solid rgba(28,36,41,.12); color:#1c2429;
+    padding:12px 14px; border-radius:8px; cursor:pointer; font-size:14px; text-align:left; transition:.2s;
+  }
+  .quiz-opt:hover{ border-color:#6a3b32; }
+  .quiz-opt.correct{ border-color:#2f7a4a; background:rgba(47,122,74,.12);}
+  .quiz-opt.picked{ border-color:#c45c4a; background:rgba(196,92,74,.12);}
+  .quiz-result{
+    font-size:13px; line-height:1.55; opacity:.82; margin-top:10px;
+  }
+  .quiz-score{ margin-top:12px; font-size:10px; letter-spacing:.14em; opacity:.45;}
+
+  /* duty free */
+  .df-shop{
+    display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px;
+  }
+  .df-item{
+    background:#fff; border:1px solid rgba(28,36,41,.12); color:#1c2429;
+    border-radius:8px; padding:10px 12px; text-align:left; cursor:pointer;
+    font:inherit; transition:.2s;
+  }
+  .df-item:hover{ border-color:#6a3b32; }
+  .df-item b{ display:block; font-size:13px; margin:1px 0 2px; }
+  .df-item em{
+    display:block; font-style:normal; font-size:12px; opacity:.5;
+  }
+  .df-item.on{ border-color:#c45c4a; background:rgba(196,92,74,.12); }
+  .df-item.dim{ opacity:.4; pointer-events:none; }
+  .df-receipt{
+    background:#fff; border-radius:8px; padding:14px 16px 12px; margin-top:4px;
+    font-size:12px; line-height:1.5;
+  }
+  .df-rc-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+  .df-rc-name{ font-size:13px; font-weight:700; letter-spacing:.06em; }
+  .df-dash{
+    border:none; border-top:1px dashed rgba(28,36,41,.22); margin:10px 0;
+  }
+  .df-line{ display:flex; justify-content:space-between; gap:10px; margin:5px 0; }
+  .df-line span:last-child{ opacity:.45; font-size:10px; letter-spacing:.08em; white-space:nowrap; }
+  .df-note{ display:block; opacity:.5; font-size:12px; }
+  .df-forecast{ font-size:13px; line-height:1.55; opacity:.82; margin-top:2px; }
+  .df-status{ margin-top:12px; font-size:10px; letter-spacing:.14em; opacity:.45;}
+
+  /* closing — arrival ticket */
+  .slide[data-i="6"]{
+    padding:4vh 4vw 12vh; align-items:center;
+  }
+  .slide[data-i="6"] .if-head{ max-width:520px; }
+  .arr-card{
+    width:100%; max-width:320px;
+    background:#f3eee4; color:#1c2429;
+    border-radius:14px; overflow:hidden; text-align:left; position:relative;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  .arr-body{ padding:16px 16px 8px; }
+  .arr-claim{
+    width:100%; margin:16px 0 8px;
+    background:#1c2429; color:#f3eee4; border:none;
+    padding:12px 14px; border-radius:8px;
+    font:inherit; font-size:11px; letter-spacing:.18em; font-weight:700;
+    cursor:pointer; transition:.2s;
+  }
+  .arr-claim:hover{ background:#2b343b; }
+  .arr-claim.claimed{ opacity:.4; cursor:default; }
+  .arr-msg{
+    font-size:13px; line-height:1.55; color:#1c2429;
+    opacity:0; max-height:0; overflow:hidden;
+    transition:opacity .5s ease, max-height .5s ease, margin .5s ease;
+  }
+  .arr-msg.show{ opacity:.8; max-height:240px; margin:4px 0 10px; }
+  .arr-card .arrived-stamp{ top:12px; right:12px; opacity:1; }
+
+  /* flight report */
+  .slide[data-i="7"]{
+    padding:4vh 4vw 12vh; align-items:center;
+  }
+  .slide[data-i="7"] .if-head{ max-width:520px; }
+  .slide[data-i="7"] .ife-panel{ max-height:72vh; overflow:auto; position:relative; }
+  .rpt-panel .arrived-stamp{ top:12px; right:12px; }
+  .rpt-row{
+    display:flex; justify-content:space-between; gap:12px;
+    margin:8px 0; align-items:flex-start;
+  }
+  .rpt-row > span:last-child{ text-align:right; }
+  .rpt-k{ font-size:8px; letter-spacing:.14em; opacity:.45; margin-bottom:2px; }
+  .rpt-v{ font-size:13px; font-weight:700; }
+  .rpt-d{ font-size:12px; opacity:.55; margin-top:1px; }
+  .rpt-next{
+    background:#fff; border-radius:8px; padding:12px 14px; margin:2px 0 4px;
+  }
+  .rpt-route{
+    display:flex; align-items:flex-end; justify-content:space-between; gap:10px;
+    margin-top:6px;
+  }
+  .rpt-route .dest-code{ font-size:22px; }
+  .rpt-plane{ opacity:.4; font-size:14px; padding-bottom:4px; }
+  .rpt-to{ text-align:right; }
+  .rpt-next .rpt-d{ margin-top:8px; }
+  .rpt-letter{ font-size:13px; line-height:1.55; opacity:.82; }
+  .rpt-panel > .ife-k{ padding-right:72px; }
+
+  .confetti{ position:fixed; top:-10px; width:8px; height:8px; z-index:10; pointer-events:none; }
+
+  ::-webkit-scrollbar{ width:5px; }
+  ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:4px;}
+
+  /* boarding-pass lock */
+  .lock{
+    position:fixed; inset:0; z-index:100;
+    background:
+      radial-gradient(ellipse at 50% 0%, #3a4650 0%, var(--plum-deep) 58%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:18px; padding:18px 16px 24px;
+    transition:opacity .55s ease, visibility .55s;
+  }
+  .lock.unlocked{ opacity:0; visibility:hidden; pointer-events:none; }
+  .lock.boarded{ pointer-events:none; }
+  .lock.boarded .gate-hint{ opacity:0; }
+  .lock.boarded .bp-scene{ pointer-events:auto; }
+  .lock.boarded .bp{ cursor:pointer; }
+  .lock.away{ opacity:0; visibility:hidden; pointer-events:none; }
+  .gate-hint{
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--rose-soft); opacity:.9; transition:opacity .4s ease;
+  }
+  .gate-hint.err{ color:#c45c4a; letter-spacing:.08em; text-transform:none; }
+  .bp-scene{
+    perspective:1400px;
+    width:min(520px, 100%);
+  }
+  .bp{
+    display:grid; width:100%;
+    background:transparent; box-shadow:none; overflow:visible;
+    transform-style:preserve-3d;
+    transition:transform .9s cubic-bezier(.45,.05,.2,1);
+    position:relative;
+  }
+  .bp.flipped{ transform:rotateY(-180deg); }
+  .bp-face{
+    grid-area:1/1;
+    background:#f3eee4; color:#1c2429;
+    border-radius:14px; overflow:hidden;
+    box-shadow:0 18px 50px rgba(0,0,0,.35);
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+  }
+  .bp-front{ display:flex; }
+  .bp-back{
+    transform:rotateY(180deg);
+    display:flex;
+    position:absolute; inset:0; width:100%; height:100%;
+  }
+  .bp-back .bp-main{ padding:10px 12px 8px; display:flex; flex-direction:column; min-width:0; }
+  .tc-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom:1px solid rgba(28,36,41,.18); padding-bottom:6px; margin-bottom:8px;
+  }
+  .tc-title{ font-size:8px; letter-spacing:.14em; font-weight:700; }
+  .tc-sub{ font-size:7px; letter-spacing:.08em; opacity:.5; }
+  .tc-list{
+    margin:0; padding-left:14px; flex:1; min-height:0; overflow:auto;
+    font-size:8px; line-height:1.45; opacity:.78; text-align:left;
+  }
+  .tc-list li{ margin-bottom:3px; }
+  .tc-fine{
+    margin-top:auto; padding-top:6px;
+    font-size:6.5px; line-height:1.4; letter-spacing:.02em; opacity:.45;
+    border-top:1px dashed rgba(28,36,41,.2);
+  }
+  .tc-meta{ display:flex; justify-content:space-between; gap:8px; margin-top:6px; }
+  .bp.shake .bp-front{ animation:shake .4s ease; }
+  .bp.success .bp-stamp{ opacity:1; transform:rotate(-12deg) scale(1); }
+  .bp-main{ flex:1; padding:16px 18px 14px; min-width:0; }
+  .bp-top{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom:1px solid rgba(28,36,41,.12); padding-bottom:10px; margin-bottom:12px;
+  }
+  .bp-airline{ font-size:10px; letter-spacing:.28em; font-weight:700; color:#6a3b32; }
+  .bp-pass{ font-size:11px; letter-spacing:.18em; font-weight:700; opacity:.7; }
+  .bp-row, .bp-meta{
+    display:flex; gap:16px; justify-content:space-between;
+  }
+  .bp-row > div:first-child{ flex:1; min-width:0; }
+  .bp-k{ font-size:8px; letter-spacing:.16em; opacity:.5; margin-bottom:3px; }
+  .bp-v{ font-size:13px; font-weight:700; }
+  .bp-passenger{ font-size:12px; line-height:1.35; }
+  .bp-route{
+    display:flex; align-items:center; justify-content:space-between;
+    margin:14px 0 12px; gap:10px;
+  }
+  .bp-code{ font-size:22px; font-weight:700; letter-spacing:.04em; line-height:1; }
+  .bp-city{ font-size:11px; opacity:.55; margin-top:3px; }
+  .bp-plane{ font-size:18px; opacity:.45; flex:1; text-align:center; }
+  .bp-flight{ margin:4px 0 12px; }
+  .lock-dots{ display:flex; gap:8px; }
+  .lock-dots .ld{
+    width:32px; height:36px;
+    border:none; border-bottom:2px solid #1c2429;
+    background:rgba(28,36,41,.04);
+    color:#1c2429; font-weight:700; font-size:20px; letter-spacing:0;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .15s, border-color .15s;
+  }
+  .lock-dots .ld.filled{ background:rgba(106,59,50,.08); }
+  .lock-dots.success .ld{ border-color:#2f7a4a; color:#2f7a4a; background:rgba(47,122,74,.08); }
+  .bp-meta{ margin-bottom:12px; }
+  .bp-barcode{
+    height:38px; position:relative; overflow:hidden;
+    background:repeating-linear-gradient(
+      90deg,
+      #1c2429 0 2px, transparent 2px 3px,
+      #1c2429 3px 4px, transparent 4px 7px,
+      #1c2429 7px 10px, transparent 10px 12px
+    );
+  }
+  .bp-scan{
+    position:absolute; inset:0 auto 0 0; width:28%;
+    background:linear-gradient(90deg, transparent, rgba(90,200,140,.45), transparent);
+    animation:scan 1.8s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes scan{
+    from{ transform:translateX(-120%); }
+    to{ transform:translateX(420%); }
+  }
+  .bp-stub{
+    width:108px; flex:0 0 108px;
+    background:#e8e0d2;
+    border-left:2px dashed rgba(28,36,41,.22);
+    padding:14px 10px;
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;
+  }
+  .bp-stub .bp-k{ margin-bottom:2px; }
+  .bp-stub .bp-code{ font-size:16px; }
+  .bp-qr{
+    width:64px; height:64px; margin-top:8px;
+    background:
+      repeating-conic-gradient(#1c2429 0 25%, transparent 0 50%) 0 0 / 8px 8px,
+      repeating-linear-gradient(#1c2429 0 3px, transparent 3px 6px);
+    opacity:.85;
+  }
+  .stub-stamp{
+    width:76px; height:76px; border-radius:50%;
+    border:2.5px solid #c45c4a; color:#c45c4a;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:2px; margin:auto 0;
+    font-size:8px; font-weight:700; letter-spacing:.14em;
+    transform:rotate(-14deg); flex-shrink:0;
+    line-height:1.2;
+  }
+  .stub-stamp b{ font-size:10px; letter-spacing:.1em; font-weight:700; }
+  .bp-stamp{
+    position:absolute; right:28%; top:38%;
+    width:92px; height:92px; border-radius:50%;
+    border:3px solid #c45c4a; color:#c45c4a;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; letter-spacing:.12em;
+    transform:rotate(-12deg) scale(.7);
+    opacity:0; transition:opacity .35s ease, transform .35s ease;
+    background:rgba(243,238,228,.55);
+    pointer-events:none;
+  }
+  @keyframes shake{
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-8px); }
+    40%{ transform:translateX(8px); }
+    60%{ transform:translateX(-6px); }
+    80%{ transform:translateX(6px); }
+  }
+  .lock-pad{ display:none; }
+  .lock-key{
+    width:56px; height:52px; border-radius:10px;
+    background:rgba(255,255,255,0.06); border:1px solid var(--line);
+    color:var(--cream); cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    line-height:1; transition:background .15s, transform .1s;
+  }
+  .lock-key:active{ background:rgba(255,255,255,0.14); transform:scale(.94); }
+  .lk-num{ font-family:'DejaVu Sans',Arial,sans-serif; font-weight:700; font-size:18px; }
+  .lk-sub{ font-size:7px; letter-spacing:.12em; opacity:.55; margin-top:2px; }
+  .lock-key-empty{ width:56px; height:52px; }
+  .lock-del{
+    background:none; border:none; font-size:18px; color:var(--rose-soft);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lock-del:active{ background:none; transform:scale(.9); }
+  @media (max-width:560px){
+    .bp-stub{ display:none; }
+    .lock-dots .ld{ width:28px; }
+    .slide[data-i="2"]{
+      justify-content:flex-start;
+      overflow:auto;
+      padding:3vh 4vw 12vh;
+    }
+    .slide[data-i="2"] .if-head{ max-width:520px; }
+    .road-wrap{
+      flex-direction:column;
+      max-width:520px;
+      gap:12px;
+    }
+    .road-left{ flex:none; width:100%; }
+    .road-right{ flex:none; max-width:none; width:100%; }
+    .road-frame{ padding-top:62%; height:auto; }
+    .slide[data-i="2"] .cp-card-img{
+      width:min(calc(100% - 16px), 168px);
+    }
+    .mute-btn{ left:12px; bottom:22px; padding:0 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="lock" id="lock">
+  <div class="gate-hint">กรุณาสแกนบอร์ดดิ้งพาสก่อนขึ้นเครื่อง</div>
+  <div class="bp-scene">
+  <div class="bp" id="boardingPass">
+    <div class="bp-face bp-front">
+    <div class="bp-main">
+      <div class="bp-top">
+        <div class="bp-airline">ANNIVERSARY AIR</div>
+        <div class="bp-pass">BOARDING PASS</div>
+      </div>
+      <div class="bp-row">
+        <div>
+          <div class="bp-k">PASSENGER</div>
+          <div class="bp-v bp-passenger">Salisa Suggum<br>Krittaphart Chatsathianphong</div>
+        </div>
+        <div>
+          <div class="bp-k">GATE</div>
+          <div class="bp-v">A17</div>
+        </div>
+      </div>
+      <div class="bp-route">
+        <div>
+          <div class="bp-code">NOW</div>
+          <div class="bp-city">ปัจจุบัน</div>
+        </div>
+        <div class="bp-plane">✈</div>
+        <div style="text-align:right">
+          <div class="bp-code">FUT</div>
+          <div class="bp-city">อนาคต</div>
+        </div>
+      </div>
+      <div class="bp-flight">
+        <div class="bp-k">FLIGHT NO.</div>
+        <div class="lock-dots" id="lockDots"></div>
+      </div>
+      <div class="bp-meta">
+        <div>
+          <div class="bp-k">DATE</div>
+          <div class="bp-v" id="bpDate"></div>
+        </div>
+        <div>
+          <div class="bp-k">BOARDING</div>
+          <div class="bp-v" id="bpBoard"></div>
+        </div>
+        <div>
+          <div class="bp-k">SEAT</div>
+          <div class="bp-v" id="bpSeat">1Y</div>
+        </div>
+      </div>
+      <div class="bp-barcode"><div class="bp-scan"></div></div>
+    </div>
+    <div class="bp-stub">
+      <div class="bp-k">FLIGHT</div>
+      <div class="bp-code" id="stubFlight">------</div>
+      <div class="bp-k">FROM / TO</div>
+      <div class="bp-v">NOW → FUT</div>
+      <div class="stub-stamp">AA<b>BOARDED</b>17 AUG</div>
+      <div class="bp-qr"></div>
+    </div>
+    <div class="bp-stamp">BOARDED</div>
+    </div>
+    <div class="bp-face bp-back">
+      <div class="bp-main">
+        <div class="tc-head">
+          <div>
+            <div class="bp-airline">ANNIVERSARY AIR</div>
+            <div class="tc-title">CONDITIONS OF CARRIAGE</div>
+          </div>
+          <div class="tc-sub">SK1708 · NOT TRANSFERABLE</div>
+        </div>
+        <ol class="tc-list">
+          <li>ผู้โดยสารทั้งสองต้องเดินทางด้วยกันตลอดเส้นทาง NOW → FUT ห้ามขึ้นเครื่องคนเดียว</li>
+          <li>ที่นั่งคู่ไม่สามารถแยกจองหรือโอนให้บุคคลที่สามได้</li>
+          <li>กระเป๋าใจต้องเปิดให้อีกฝ่ายตรวจได้เมื่อมีการขอ โดยไม่คิดค่าธรรมเนียม</li>
+          <li>ความโกรธ น้อยใจ และความเงียบเกินเวลา ต้องโหลดลงก่อนขึ้นเครื่อง</li>
+          <li>คำว่าขอโทษมีผลทันที และไม่สามารถยกเลิกหลังจากออกจากปากได้</li>
+          <li>การจับมือกันเป็นอุปกรณ์ความปลอดภัยมาตรฐาน แนะนำให้ใช้ตลอดเที่ยวบิน</li>
+          <li>เที่ยวบินนี้ไม่มีจุดหมายสุดท้าย มีเพียงการเดินทางต่อไปด้วยกัน</li>
+          <li>ตั๋วใบนี้ห้ามคืน ห้ามขายต่อ ไม่ว่ากรณีใดก็ตาม</li>
+        </ol>
+        <div class="tc-fine">
+          Carrier is not liable for turbulence of feelings. Baggage of the past may be carried on if declared.
+          Delay in “I miss you” messages shall be compensated with extra hugs.
+          Validity: <span id="tcDays">—</span> days in service · Class <span id="tcYears">0</span>Y · Gate A17.
+          By boarding, both passengers agree to keep choosing each other on every leg of the journey.
+        </div>
+      </div>
+      <div class="bp-stub">
+        <div class="bp-k">SEE</div>
+        <div class="bp-v">REVERSE</div>
+        <div class="bp-k">FLIGHT</div>
+        <div class="bp-code">SK1708</div>
+        <div class="stub-stamp">AA<b>BOARDED</b>17 AUG</div>
+        <div class="bp-qr"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="lock-pad" id="lockPad">
+    <button class="lock-key" data-k="1"><span class="lk-num">1</span></button>
+    <button class="lock-key" data-k="2"><span class="lk-num">2</span><span class="lk-sub">ABC</span></button>
+    <button class="lock-key" data-k="3"><span class="lk-num">3</span><span class="lk-sub">DEF</span></button>
+    <button class="lock-key" data-k="4"><span class="lk-num">4</span><span class="lk-sub">GHI</span></button>
+    <button class="lock-key" data-k="5"><span class="lk-num">5</span><span class="lk-sub">JKL</span></button>
+    <button class="lock-key" data-k="6"><span class="lk-num">6</span><span class="lk-sub">MNO</span></button>
+    <button class="lock-key" data-k="7"><span class="lk-num">7</span><span class="lk-sub">PQRS</span></button>
+    <button class="lock-key" data-k="8"><span class="lk-num">8</span><span class="lk-sub">TUV</span></button>
+    <button class="lock-key" data-k="9"><span class="lk-num">9</span><span class="lk-sub">WXYZ</span></button>
+    <div class="lock-key-empty"></div>
+    <button class="lock-key" data-k="0"><span class="lk-num">0</span></button>
+    <button class="lock-key lock-del" id="lockDel">⌫</button>
+  </div>
+</div>
+
+<div class="petals" id="petals"></div>
+
+<div class="deck">
+
+
+  <!-- SLIDE 1: TITLE -->
+  <section class="slide active" data-i="0"></section>
+
+  <!-- SLIDE: path before dating -->
+  <section class="slide" data-i="1">
+    <div class="if-head">
+      <div>
+        <div class="bp-airline">ANNIVERSARY AIR</div>
+        <div class="if-map">CONNECTING FLIGHTS</div>
+      </div>
+      <div class="if-flight">BEFORE BOARDING · NOW → FUT</div>
+    </div>
+    <div class="pre-track" id="preTrack"></div>
+    <div class="pre-hint" id="preHint"></div>
+  </section>
+
+  <!-- SLIDE 2: JOURNEY ROADMAP -->
+  <section class="slide" data-i="2">
+    <div class="if-head">
+      <div>
+        <div class="bp-airline">ANNIVERSARY AIR</div>
+        <div class="if-map">IN-FLIGHT MAP</div>
+      </div>
+      <div class="if-flight">FLIGHT SK1708 · NOW → FUT</div>
+    </div>
+    <div class="road-wrap">
+      <div class="road-left">
+        <div class="if-nav">
+          <button onclick="roadStep(1)" id="roadNextBtn">▲<span>NEXT</span></button>
+          <div class="if-legs" id="roadDots"></div>
+          <button onclick="roadStep(-1)" id="roadPrevBtn">▼<span>PREV</span></button>
+        </div>
+        <div class="road-frame" id="globeFrame">
+          <div class="if-screen-bar"><span>NOW ✈ FUT</span><span>SK1708</span></div>
+          <canvas id="globeCanvas"></canvas>
+        </div>
+      </div>
+      <div class="road-right">
+        <div class="cp-card" id="cpCard">
+          <div class="dest-top">
+            <div class="bp-k">DESTINATION</div>
+            <div class="dest-code" id="cpCardCode"></div>
+          </div>
+          <div class="cp-card-img" id="cpCardImg"></div>
+          <div class="cp-card-body">
+            <div class="dest-meta">
+              <div>
+                <div class="bp-k">CITY</div>
+                <div class="cp-card-title" id="cpCardTitle"></div>
+              </div>
+              <div>
+                <div class="bp-k">DATE</div>
+                <div class="cp-card-when" id="cpCardWhen"></div>
+              </div>
+            </div>
+            <div class="cap-box" id="cpCapBox">
+              <div class="cp-card-cap" id="cpCardCap"></div>
+              <button type="button" class="cap-more">อ่านต่อ</button>
+            </div>
+          </div>
+          <div class="dest-bar"></div>
+          <div class="arrived-stamp" id="cpArrived">ARRIVED</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: CABIN LOTTERY -->
+  <section class="slide" data-i="3">
+    <div class="if-head">
+      <div>
+        <div class="bp-airline">ANNIVERSARY AIR</div>
+        <div class="if-map">CABIN LOTTERY</div>
+      </div>
+      <div class="if-flight">FLIGHT SK1708 · IN-FLIGHT</div>
+    </div>
+    <div class="ife-panel">
+      <div class="ife-k">LUCKY NUMBERS · ขูดก่อน</div>
+      <div class="lotto-lucky" id="lottoLucky"></div>
+      <div class="ife-k">PRIZE PANEL · ขูดแล้วเลขตรง = ได้รางวัล</div>
+      <div class="lotto-grid locked" id="lottoGrid"></div>
+      <div class="lotto-status" id="lottoStatus">ขูดเลขนำโชค 2 ชุดก่อน แล้วค่อยขูดช่องรางวัล</div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: QUIZ ABOUT MINT -->
+  <section class="slide" data-i="4">
+    <div class="if-head">
+      <div>
+        <div class="bp-airline">ANNIVERSARY AIR</div>
+        <div class="if-map">PASSENGER INTERVIEW</div>
+      </div>
+      <div class="if-flight">FLIGHT SK1708 · IN-FLIGHT</div>
+    </div>
+    <div class="ife-panel">
+      <div class="ife-k">CABIN PSYCH</div>
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <div class="quiz-score" id="quizScore">SCORE: 0</div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: DUTY FREE -->
+  <section class="slide" data-i="5">
+    <div class="if-head">
+      <div>
+        <div class="bp-airline">ANNIVERSARY AIR</div>
+        <div class="if-map">DUTY FREE</div>
+      </div>
+      <div class="if-flight">FLIGHT SK1708 · DESCENT</div>
+    </div>
+    <div class="ife-panel">
+      <div class="ife-k">TAX FREE SHOP</div>
+      <p class="sub" id="dfSub">เลือกของ 3 ชิ้นก่อนลงเครื่อง</p>
+      <div id="dfBody"></div>
+      <div class="df-status" id="dfStatus">BAG: 0 / 3</div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: ARRIVAL -->
+  <section class="slide" data-i="6">
+    <div class="if-head">
+      <div>
+        <div class="bp-airline">ANNIVERSARY AIR</div>
+        <div class="if-map">ARRIVED</div>
+      </div>
+      <div class="if-flight">FLIGHT SK1708 · NOW → FUT</div>
+    </div>
+    <div class="arr-card">
+      <div class="dest-top">
+        <div class="bp-k">DESTINATION</div>
+        <div class="dest-code">FUT</div>
+      </div>
+      <div class="arr-body">
+        <div class="dest-meta">
+          <div>
+            <div class="bp-k">GATE</div>
+            <div class="cp-card-title">อนาคต</div>
+          </div>
+          <div>
+            <div class="bp-k">DATE</div>
+            <div class="cp-card-when">17 AUG 26</div>
+          </div>
+        </div>
+        <button class="arr-claim" id="surpriseBtn" onclick="surprise()">CLAIM GIFT</button>
+        <div class="arr-msg" id="hiddenMsg"></div>
+      </div>
+      <div class="dest-bar"></div>
+      <div class="arrived-stamp show">BOARDED</div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: FLIGHT REPORT -->
+  <section class="slide" data-i="7">
+    <div class="if-head">
+      <div>
+        <div class="bp-airline">ANNIVERSARY AIR</div>
+        <div class="if-map">FLIGHT REPORT</div>
+      </div>
+      <div class="if-flight">FLIGHT SK1708 · COMPLETE</div>
+    </div>
+    <div class="ife-panel rpt-panel">
+      <div class="ife-k">THANK YOU FOR FLYING</div>
+      <div id="rptBody"></div>
+      <div class="arrived-stamp show">NEXT YEAR</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button onclick="go(-1)">‹</button>
+  <div class="dots" id="dots"></div>
+  <button onclick="go(1)">›</button>
+</div>
+<audio id="cabinAudio" loop preload="auto">
+  <source src="music/cabin.mp3" type="audio/mpeg">
+  <source src="music/cabin.m4a" type="audio/mp4">
+</audio>
+<button type="button" class="mute-btn" id="muteBtn" onclick="toggleCabinMute()">CABIN ON</button>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script>
+/* ---------- lock screen ---------- */
+// แก้รหัสผ่านตรงนี้
+const PASSCODE = 'SK1708';
+const TEST_PASSCODE = '111111';
+const boardingAt = new Date('2026-08-17T22:00:00+07:00');
+// แก้วันที่เริ่มครบรอบตรงนี้
+const startDate = new Date('2025-08-17T00:00:00');
+let lockBuffer = '';
+let lockBusy = false;
+const lockDotsWrap = document.getElementById('lockDots');
+const boardingPass = document.getElementById('boardingPass');
+const stubFlight = document.getElementById('stubFlight');
+const gateHint = document.querySelector('.gate-hint');
+(function fillPassTimes(){
+  document.getElementById('bpDate').textContent = '17 AUG 26';
+  document.getElementById('bpBoard').textContent = '22:00';
+  const now = new Date();
+  let years = now.getFullYear() - startDate.getFullYear();
+  if(now.getMonth() < startDate.getMonth() || (now.getMonth() === startDate.getMonth() && now.getDate() < startDate.getDate())) years--;
+  document.getElementById('bpSeat').textContent = `${Math.max(0, years)}Y`;
+})();
+for(let i=0;i<PASSCODE.length;i++){
+  const d = document.createElement('div');
+  d.className = 'ld';
+  lockDotsWrap.appendChild(d);
+}
+function renderLockDots(){
+  const dots = lockDotsWrap.querySelectorAll('.ld');
+  dots.forEach((d,i)=>{
+    d.classList.toggle('filled', i < lockBuffer.length);
+    d.textContent = lockBuffer[i] || '';
+  });
+  if(stubFlight) stubFlight.textContent = (lockBuffer + '------').slice(0, 6);
+}
+function lockPress(k){
+  if(lockBusy || document.getElementById('lock').classList.contains('boarded')) return;
+  if(lockBuffer.length >= PASSCODE.length) return;
+  lockBuffer += k;
+  renderLockDots();
+  if(lockBuffer.length === PASSCODE.length){
+    lockBusy = true;
+    setTimeout(checkPasscode, 180);
+  }
+}
+function lockFail(msg){
+  if(msg){
+    gateHint.textContent = msg;
+    gateHint.classList.add('err');
+  }
+  boardingPass.classList.add('shake');
+  setTimeout(()=>{
+    boardingPass.classList.remove('shake');
+    lockBuffer = '';
+    lockBusy = false;
+    renderLockDots();
+  }, 450);
+}
+function lockOk(){
+  gateHint.classList.remove('err');
+  lockDotsWrap.classList.add('success');
+  boardingPass.classList.add('flipped');
+  document.getElementById('lock').classList.add('boarded');
+  setTimeout(renderCounter, 420);
+  startCabinAudio();
+}
+const cabinAudio = document.getElementById('cabinAudio');
+let cabinMuted = false;
+function syncMuteBtn(){
+  const btn = document.getElementById('muteBtn');
+  btn.textContent = cabinMuted ? 'CABIN MUTE' : 'CABIN ON';
+  btn.classList.toggle('is-muted', cabinMuted);
+  btn.setAttribute('aria-label', cabinMuted ? 'Unmute cabin audio' : 'Mute cabin audio');
+}
+function startCabinAudio(){
+  cabinAudio.volume = 0.4;
+  cabinAudio.muted = cabinMuted;
+  const play = cabinAudio.play();
+  if(play) play.catch(()=>{});
+  syncMuteBtn();
+}
+function toggleCabinMute(){
+  cabinMuted = !cabinMuted;
+  cabinAudio.muted = cabinMuted;
+  if(!cabinMuted) startCabinAudio();
+  syncMuteBtn();
+}
+function checkPasscode(){
+  if(lockBuffer === TEST_PASSCODE){
+    lockOk();
+    return;
+  }
+  if(lockBuffer === PASSCODE){
+    if(Date.now() < boardingAt.getTime()){
+      lockFail('ยังไม่ถึงเวลาขึ้นเครื่อง · 17 AUG 26 22:00');
+      return;
+    }
+    lockOk();
+    return;
+  }
+  lockFail('รหัสผ่านไม่ถูกต้อง');
+}
+document.querySelectorAll('.lock-key[data-k]').forEach(btn=>{
+  btn.addEventListener('click', ()=> lockPress(btn.dataset.k));
+});
+document.getElementById('lockDel').addEventListener('click', ()=>{
+  if(lockBusy) return;
+  lockBuffer = lockBuffer.slice(0,-1);
+  renderLockDots();
+});
+let flipBusy = false;
+boardingPass.addEventListener('click', ()=>{
+  if(!document.getElementById('lock').classList.contains('boarded')) return;
+  if(flipBusy) return;
+  flipBusy = true;
+  boardingPass.classList.toggle('flipped');
+  setTimeout(()=>{ flipBusy = false; }, 900);
+});
+document.addEventListener('keydown', e=>{
+  if(document.getElementById('lock').classList.contains('boarded')) return;
+  if(e.ctrlKey || e.metaKey || e.altKey) return;
+  if(/^[a-zA-Z0-9]$/.test(e.key)){
+    e.preventDefault();
+    lockPress(e.key.toUpperCase());
+  }
+  if(e.key === 'Backspace'){
+    e.preventDefault();
+    if(lockBusy) return;
+    lockBuffer = lockBuffer.slice(0,-1);
+    renderLockDots();
+  }
+});
+
+/* ---------- petals ---------- */
+const petalsEl = document.getElementById('petals');
+const petalChars = ['♥','✦','♡'];
+for(let i=0;i<18;i++){
+  const s = document.createElement('div');
+  s.className='petal';
+  s.textContent = petalChars[Math.floor(Math.random()*petalChars.length)];
+  s.style.left = Math.random()*100+'vw';
+  s.style.animationDuration = (10+Math.random()*12)+'s';
+  s.style.animationDelay = (Math.random()*10)+'s';
+  s.style.fontSize = (10+Math.random()*14)+'px';
+  petalsEl.appendChild(s);
+}
+
+/* ---------- nav ---------- */
+const slides = document.querySelectorAll('.slide');
+const dotsEl = document.getElementById('dots');
+let cur = 0;
+slides.forEach((s,i)=>{
+  const d = document.createElement('div');
+  d.className='dot'+(i===0?' active':'');
+  d.onclick = ()=>{
+    if(!document.getElementById('lock').classList.contains('boarded')) return;
+    show(i);
+  };
+  dotsEl.appendChild(d);
+});
+function show(i){
+  cur = Math.max(0, Math.min(slides.length-1, i));
+  slides.forEach((s,idx)=>s.classList.toggle('active', idx===cur));
+  dotsEl.querySelectorAll('.dot').forEach((d,idx)=>d.classList.toggle('active', idx===cur));
+  const navBtns = document.querySelectorAll('.nav > button');
+  if(navBtns[0]) navBtns[0].disabled = cur<=0;
+  if(navBtns[1]) navBtns[1].disabled = cur>=slides.length-1;
+}
+function go(delta){
+  if(!document.getElementById('lock').classList.contains('boarded')) return;
+  if(cur+delta < 0 || cur+delta >= slides.length) return;
+  show(cur+delta);
+}
+document.querySelectorAll('.nav > button')[0].disabled = true;
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight') go(1);
+  if(e.key==='ArrowLeft') go(-1);
+});
+
+const preTrack = document.getElementById('preTrack');
+const preHintEl = document.getElementById('preHint');
+const preDays = [
+  {
+    "day": 0,
+    "date": "13 ก.พ. 67",
+    "title": "จุดเริ่มต้น",
+    "caption": "จุดเริ่มต้นของเรื่องราวทั้งหมดเกิดจากความประทับใจในการปีนบันไดของผู้หญิงคนนี้",
+    "stamp": "DEPARTURE",
+    "img": "photos/flights/DAY0.jpg"
+  },
+  {
+    "day": 9,
+    "date": "22 ก.พ. 67",
+    "title": "รูปคู่รูปแรก",
+    "caption": "นี่รูปคู่อย่างเป็นทางการรูปแรกที่เซ็นทรัลของเรา จำได้มั้ย?",
+    "stamp": "DEPARTURE",
+    "img": "photos/flights/DAY9.jpg"
+  },
+  {
+    "day": 24,
+    "date": "8 มี.ค. 67",
+    "title": "ของกินใกล้ฉัน",
+    "caption": "บางครั้งเราก็เหนื่อยจากการทำงานมาก เราเลยมากินข้าวกันบ้าง วันนั้นมีงานปีใหม่บริษัทแต่เค้าไปช้าเพราะว่าเค้ากินข้าวกับเบบี๋อยู่ แล้วเบบี๋ก็ขับรถไปส่งเค้าจำได้ไหม จริงๆ เค้าตั้งใจอยู่กับบี๋มากกว่าไปงาน",
+    "stamp": "DEPARTURE",
+    "img": "photos/flights/DAY24.jpg"
+  },
+  {
+    "day": 66,
+    "date": "19 เม.ย. 67",
+    "title": "ศาลากลางใจ",
+    "caption": "นี่คือ รูปแรกที่เบบี๋บอกว่าให้เค้าถ่ายให้หน่อยตอนที่เราไปศาลากลางกัน",
+    "stamp": "DEPARTURE",
+    "img": "photos/flights/DAY66.jpg"
+  },
+  {
+    "day": 74,
+    "date": "27 เม.ย. 67",
+    "title": "ซ้อมแบบเนียนๆ",
+    "caption": "ก่อนจะให้ดอกไม้จริงเค้าเคยแอบชวน ไปซ้อมถ่ายรูปกับดอกไม้มาแล้วด้วยนะ ดอกไม้สวยน้อยไปเยอะเลยเมื่ออยู่กับเบบี๋",
+    "stamp": "LAYOVER",
+    "img": "photos/flights/DAY74.jpg"
+  },
+  {
+    "day": 117,
+    "date": "9 มิ.ย. 67",
+    "title": "ทำเซียนรักการอ่าน",
+    "caption": "ที่นี่คือ river space ตอนนั้นตื่นเต้นมากเลยที่บี๋มากับเค้า แถมยังมาอ่านหนังสือด้วย ถึงแม้จะทำทรงอ่านไปได้ไม่กี่หน้าก็เหอะ 555",
+    "stamp": "LAYOVER",
+    "img": "photos/flights/DAY117.jpg"
+  },
+  {
+    "day": 121,
+    "date": "13 มิ.ย. 67",
+    "title": "ปล่อยผ่านความรู้สึก",
+    "caption": "และนี่คือรูปคู่รูปแรกที่ถูกแอบถ่ายไว้ ตอนเราไปดูท้องฟ้าด้วยกัน",
+    "stamp": "LAYOVER",
+    "img": "photos/flights/DAY121.jpg"
+  },
+  {
+    "day": 122,
+    "date": "14 มิ.ย. 67",
+    "title": "ที่ของเรา(รึเปล่า?)",
+    "caption": "แล้วเราก็นั่งฟังเพลง จิบเบียร์กระป๋อง วันนั้นบี๋เล่าเรื่องตุรกีให้เค้าฟังด้วย ตื่นเต้นมาก",
+    "stamp": "LAYOVER",
+    "img": "photos/flights/DAY122.jpg"
+  },
+  {
+    "day": 125,
+    "date": "17 มิ.ย. 67",
+    "title": "เด็กขี้แง",
+    "caption": "ร้องไห้ตาบวม เพราะทะเลาะกับพี่โจ้ เค้าอาสาขับรถไปหา จำได้ว่าตอนนั้นอยู่รพ ลามาหาหมอ แต่เบบี๋สำคัญที่สุด",
+    "stamp": "LAYOVER",
+    "img": "photos/flights/DAY125.jpg"
+  },
+  {
+    "day": 125,
+    "date": "17 มิ.ย. 67",
+    "title": "รอยยิ้มที่หายไป",
+    "caption": "และนี่ก็คือรอยยิ้มที่ได้รับกลับไปหลังจากที่เค้ามาหา :)",
+    "stamp": "LAYOVER",
+    "img": "photos/flights/DAY125_2.jpg"
+  },
+  {
+    "day": 127,
+    "date": "19 มิ.ย. 67",
+    "title": "ถูกทิ้งไว้",
+    "caption": "เห็นแบบนี้เค้าก็มีช่วงที่เครียดเหมือนกันนะ ทุกครั้งที่บี๋หายไปเป็นอะไรก็ไม่รู้ เค้าจะกระวนกระวายแล้วก็ออกไปนั่งมองท้องฟ้า หรือขับรถไปเรื่อยๆ",
+    "stamp": "DELAY",
+    "img": "photos/flights/DAY127.jpg"
+  },
+  {
+    "day": 131,
+    "date": "23 มิ.ย. 67",
+    "title": "ตา มา รอ รถ ไฟ",
+    "caption": "รูปคู่ตัดแปะอีกรูปนึงที่เค้าชอบ เพราะเรายังไม่เคยขึ้นรถไฟด้วยกันเลย",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY131.jpg"
+  },
+  {
+    "day": 132,
+    "date": "24 มิ.ย. 67",
+    "title": "แอบถ่ายความน่ารัก",
+    "caption": "ตอนนั่งทำงานอยู่เค้าก็ สงสัยว่าทำไมผู้หญิงคนนี้ขยันแล้วก็น่ารักจังก็เลยแอบถ่าย ความน่ารักเก็บไว้ดูคนเดียว",
+    "stamp": "LAYOVER",
+    "img": "photos/flights/DAY132.jpg"
+  },
+  {
+    "day": 262,
+    "date": "1 พ.ย. 67",
+    "title": "ก่อนระเบิดลง",
+    "caption": "บี๋ยอมไปดูคอนเสิร์ตวง whatfalse กับเค้าด้วยนะ เค้าตั้งใจจะขอเบบี๋เป็นแฟนในวันนี้แหละ",
+    "stamp": "DELAY",
+    "img": "photos/flights/DAY262.jpg"
+  },
+  {
+    "day": 262,
+    "date": "1 พ.ย. 67",
+    "title": "เสียงเพลงที่ไร้ความสุข",
+    "caption": "แต่สุดท้ายก็พลาดท่าเบบี๋เข้าใจผิด งอนแล้วก็นั่งอยู่ในรถ ไม่ลงไปไหนแต่ก็ยังอยากให้เค้าดูคอนเสิร์ตจนจบเพราะว่าเป็นวงที่เค้าชอบมาก เค้าก็เลยยืนดูอยู่ข้างข้างรถใกล้ๆ",
+    "stamp": "DELAY",
+    "img": "photos/flights/DAY262_2.jpg"
+  },
+  {
+    "day": 263,
+    "date": "2 พ.ย. 67",
+    "title": "ดอกไม้ให้คุณ",
+    "caption": "และนี่ก็คือดอกไม้ที่เค้าจะให้ในวันนั้นยอมรับว่าเป็นหนึ่งวันที่เขาเสียใจมากจริงๆ ภาพดอกไม้ที่ตกจากกระโปรงรถเบบี๋ ลงมาที่พื้นยังติดตาเค้าจนจนถึงทุกวันนี้อยู่เลย แล้ววันนั้นเค้าเป็นห่วงเบบี๋มากๆ เพราะว่าบี๋ขับรถเร็วมากจนเค้าต้องแอบขับรถตามไปเพื่อดูว่าบี๋ถึงบ้านปลอดภัยหรือเปล่า",
+    "stamp": "DELAY",
+    "img": "photos/flights/DAY263.jpg"
+  },
+  {
+    "day": 263,
+    "date": "2 พ.ย. 67",
+    "title": "โดดเดี่ยวแบบเดิม",
+    "caption": "หลังจากนั้นเค้าก็เครียด แล้วก็กลับมานั่งมองท้องฟ้าเหมือนเดิม TT จนสุดท้ายบี๋ ก็กลับมาคุยด้วย เพราะเราไม่ยอมแพ้ และเปิดใจให้กันอีกครั้ง",
+    "stamp": "DELAY",
+    "img": "photos/flights/DAY263_2.jpg"
+  },
+  {
+    "day": 291,
+    "date": "13 พ.ย. 67",
+    "title": "อยู่ไกลแต่ใจคิดถึง",
+    "caption": "เป็นอีกครั้งที่รู้สึกว่าบี๋เปิดใจ อยู่ไกลแค่ไหนก็ VDO Call หาเค้าแม้จะไม่มีอากาศแล้วก็ตาม",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY291.png"
+  },
+  {
+    "day": 278,
+    "date": "17 พ.ย. 67",
+    "title": "เปลี่ยนที่นอน",
+    "caption": "คอนเสิร์ตสวนผึ้งที่ใหญ่ที่สุดที่เราเคยไปดูด้วยกันเค้าสนุกมากเลยแต่เบบี๋นอนหลับ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY278.jpg"
+  },
+  {
+    "day": 283,
+    "date": "22 พ.ย. 67",
+    "title": "กำลังใจ",
+    "caption": "วันแข่งกีฬาสี มีเบบี๋มาให้กำลังใจด้วย ถึงจะแพ้ แต่ก็มีความสุขมาก",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY283.jpg"
+  },
+  {
+    "day": 312,
+    "date": "21 ธ.ค. 67",
+    "title": "ปีนกำแพง",
+    "caption": "ยอมให้โอบเอวถ่ายรูปด้วย ยังไม่ได้เป็นแฟนกันเลยนะ ไม่ธรรมดาจริงๆ เราเนี่ย",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY312.jpg"
+  },
+  {
+    "day": 320,
+    "date": "29 ธ.ค. 67",
+    "title": "ข้ามกำแพง",
+    "caption": "เค้าชอบรูปนี้มันคลาสสิกดี เหมือนเรากำลังนั่งมองอนาคตไปด้วยกัน",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY320.jpg"
+  },
+  {
+    "day": 341,
+    "date": "19 ม.ค. 68",
+    "title": "กระโดดกำแพง",
+    "caption": "เขางูเราก็ไปกันมาแล้วนะ จริงๆ เราน่าจะไปทุกที่ในราชบุรีแล้วมั้ง",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY341.jpg"
+  },
+  {
+    "day": 347,
+    "date": "25 ม.ค. 68",
+    "title": "ถ่ายเข้าไป",
+    "caption": "มาดูรูปเค้าที่เบบีถ่ายให้ไว้บ้าง น่ารักใช่มั้ยย",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY347.jpg"
+  },
+  {
+    "day": 348,
+    "date": "26 ม.ค. 68",
+    "title": "ฝึกเป็นนายแบบ",
+    "caption": "นี่ก็เท่สุดๆ 5555",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY348.jpg"
+  },
+  {
+    "day": 348,
+    "date": "26 ม.ค. 68",
+    "title": "ตื่นเต้นมาก",
+    "caption": "แอบจับมือครั้งแรก ยังจำความรู้สึกได้อยู่เลย มันอบอุ่น น่ารัก น่าเอ็นดู ทะนุถนอม",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY348_2.jpg"
+  },
+  {
+    "day": 355,
+    "date": "2 ก.พ. 68",
+    "title": "จะไปแชมป์โลก",
+    "caption": "วงการแบดมินตันไทยก็มีชื่อเราสองคนบัญญัติอยู่ในนั้นน่ะ เป็นครั้งแรกของเค้าเลยที่ได้มาดูกีฬาสดๆแบบนี้ตื่นเต้นมาก",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY355.jpg"
+  },
+  {
+    "day": 361,
+    "date": "8 ก.พ. 68",
+    "title": "กลับมาที่เดิม",
+    "caption": "เค้าชอบร้านนี้พอๆกับริเวอร์ space เลย เค้าคิดว่าบี๋ก็น่าจะชอบเพราะว่ามาซ้ำ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY361.jpg"
+  },
+  {
+    "day": 362,
+    "date": "9 ก.พ. 68",
+    "title": "เหมือนแต่ยังไม่ใช่",
+    "caption": "เริ่มสะพายกระเป๋า ถือกระเป๋าแทนกันแล้ว เหมือนแฟนทะลุมิติมาเลยแต่ยังไม่ใช่นะ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY362.jpg"
+  },
+  {
+    "day": 362,
+    "date": "9 ก.พ. 68",
+    "title": "หลอกมาปั่นเป็ด",
+    "caption": "เรือเป็ดพลังงานขา คนนึงปั่น คนนึงถ่ายรูป แต่ก็ขอบคุณที่มาด้วยกันนะไม่คิดเลยว่าบี๋จะมาร้อนกับเค้าได้",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY362_2.jpg"
+  },
+  {
+    "day": 364,
+    "date": "11 ก.พ. 68",
+    "title": "ศิลปะอยู่ที่ใจ",
+    "caption": "วงการศิลปะ เราก็เข้าถึงทุอณู จำได้ไหมว่ารูปนี้เราไปวาดกันที่ไหน",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY364.jpg"
+  },
+  {
+    "day": 366,
+    "date": "13 ก.พ. 68",
+    "title": "เชฟเทเบิล",
+    "caption": "วงการอาหารเราก็มา ถ้าไม่ติดว่าต้อง มันอร่อยเกินจนอยากเก็บไว้ให้เบบี๋คนเดียว ป่านนี้เชฟอ๊อฟคงยังไม่ได้เกิด",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY366.jpg"
+  },
+  {
+    "day": 367,
+    "date": "14 ก.พ. 68",
+    "title": "ดอกไม้ให้คุณ(อีกรอบ)",
+    "caption": "14 กุมภา ยังไม่ได้เป็นแฟนนะ แต่เค้าก็มีดอกไม้เล็กๆ ให้ แต่เบบี๋ไม่ชอบบอกว่าชอบดอกทานตะวันมากกว่า",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY367.jpg"
+  },
+  {
+    "day": 375,
+    "date": "22 ก.พ. 68",
+    "title": "เชฟโต๊ะอร่อย",
+    "caption": "อาหารอย่างแรกที่เบบี๋มาทำที่บ้านเค้า อร่อยมาจนถึงวันนี้เลย",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY375.jpg"
+  },
+  {
+    "day": 383,
+    "date": "2 มี.ค. 68",
+    "title": "บ้านอยู่ในเมือง",
+    "caption": "จะว่าไปกรุงเทพเราก็ไปเที่ยวด้วยกันบ่อยนะ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY383.jpg"
+  },
+  {
+    "day": 396,
+    "date": "15 มี.ค. 68",
+    "title": "ไปไกลครั้งแรก",
+    "caption": "รูปคู่ในทริปต่างประเทศครั้งแรกของเรา 2 คน เค้าดีใจและตื่นเต้นมากๆ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY396.jpg"
+  },
+  {
+    "day": 427,
+    "date": "15 เม.ย. 68",
+    "title": "ยิ่งมองยิ่งน่ารัก",
+    "caption": "ไม่รู้ทำไมแต่เวลาเบบี๋ใส่ชุดนี้แล้วน่ารักทุกที ขอบคุณที่ยอมตากแดดมาด้วยกันนะ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY427.jpg"
+  },
+  {
+    "day": 427,
+    "date": "15 เม.ย. 68",
+    "title": "ดีใจที่สุด",
+    "caption": "ตอนแรกกะทำรูป AI ให้เฉยๆ แต่พอเห็นว่าบี๋ให้เอาไปลงได้ เค้าดีใจ ยิ้มแก้มปริเลย เหมือนบี๋เปิดใจมากขึ้นอีกแล้ว",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY427_2.png"
+  },
+  {
+    "day": 439,
+    "date": "27 เม.ย. 68",
+    "title": "แทรกซึม",
+    "caption": "เริ่มปฏิบัติการแทรกซึมเข้ามาในครอบครัวเพิ่มมากขึ้น เริ่มพาแม่กับน้องไปเที่ยว หวังเป็นตัวช่วยมัดใจ 555",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY439.jpg"
+  },
+  {
+    "day": 454,
+    "date": "12 พ.ค. 68",
+    "title": "ดูแลทั้งใจ",
+    "caption": "”ขนตาบี๋มันชอบหลุดออกมาตลอดเลย มานี่ซิ“",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY454.jpg"
+  },
+  {
+    "day": 466,
+    "date": "24 พ.ค. 68",
+    "title": "มือปืนมีนาย",
+    "caption": "รูปนี้เหมือนคนค้นคน หรือไม่ก็พวกทวงหนี้ตามบ้าน แต่เค้าชอบนะเพราะว่าเบบี๋ถ่ายให้",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY466.jpg"
+  },
+  {
+    "day": 487,
+    "date": "14 มิ.ย. 68",
+    "title": "มาดูเป็ด",
+    "caption": "เป็ดสีแดงเราก็ปั่น แต่รอบนี้มีคนช่วยแล้ว",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY487.jpg"
+  },
+  {
+    "day": 488,
+    "date": "18 มิ.ย. 68",
+    "title": "วัยรุ่น GEN Z",
+    "caption": "เริ่ม VDO Call คาสายแบบวัยรุ่น เห็นหน้าเค้าปุ๊บ หลับปั๊บ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY488.png"
+  },
+  {
+    "day": 491,
+    "date": "18 มิ.ย. 68",
+    "title": "ไม่ใช่แฟนก็ทำแทนได้",
+    "caption": "มารอทำเล็บด้วย ทางร้านมีเค้าเป็นผู้ชายคนเดียวที่มารอ คนอื่นคงคิดว่าแฟนมารอแล้วจริงๆแล้วไม่ใช่นะครับ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY491.jpg"
+  },
+  {
+    "day": 514,
+    "date": "11 ก.ค. 68",
+    "title": "เริ่มพามาหาแม่",
+    "caption": "ถึงตาเบบี๋เริ่มแทรกซึมเข้ามาหาแม่เค้าแล้ว เริ่มจากการพาไปเที่ยวพิพิธภัณฑ์ก่อนเลย",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY514.jpg"
+  },
+  {
+    "day": 515,
+    "date": "12 ก.ค. 68",
+    "title": "เขียนความในใจ",
+    "caption": "วงการนักเขียนเราก็เข้านะ ก็จะจำไม่ได้ว่าเป็นนิทรรศการอะไร แต่เค้าชอบมากๆชอบที่สุด",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY515.jpg"
+  },
+  {
+    "day": 515,
+    "date": "12 ก.ค. 68",
+    "title": "แว่นมานี่มา",
+    "caption": "มีคนมาอ้อนบอกว่าแว่นเก่าใช้ไม่ดีแล้ว อยากมาดูแว่นใหม่ น่ารักเลยยย",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY515_2.jpg"
+  },
+  {
+    "day": 516,
+    "date": "13 ก.ค. 68",
+    "title": "แม่ศรีเรือน",
+    "caption": "เห็นแบบนี้เป็นแม่ศรีเรือนด้วยนะบางครั้ง",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY516.jpg"
+  },
+  {
+    "day": 518,
+    "date": "15 ก.ค. 68",
+    "title": "เซลล์ขายรถ",
+    "caption": "ประสบการณ์การขายรถครั้งแรก สนับสนุนและเคียงข้างโดย “เบบี๋”",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY518.jpg"
+  },
+  {
+    "day": 522,
+    "date": "19 ก.ค. 68",
+    "title": "ทางของเค้า",
+    "caption": "เอาจริงๆรูปนี้เหมือนเด็กเล่นขายของเลย มันน่ารักกกก ตะมุตะมิ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY522.jpg"
+  },
+  {
+    "day": 523,
+    "date": "20 ก.ค. 68",
+    "title": "เริ่มได้ดี",
+    "caption": "ต่อมาคือวงการเครื่องดื่ม ไปเสาะหาวัตถุดิบ แล้วก็ตั้งใจทำกัน ซื้อขวดมาตั้งเยอะ สุดท้ายทำอยู่สองวัน 555",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY523.jpg"
+  },
+  {
+    "day": 530,
+    "date": "27 ก.ค. 68",
+    "title": "นั่งรถใหม่",
+    "caption": "เค้าออกรถใหม่มาแล้ว เบบี๋ก็มานั่งเป็นตุ๊กตาขวัญใจหน้ารถให้เค้า",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY530.jpg"
+  },
+  {
+    "day": 532,
+    "date": "29 ก.ค. 68",
+    "title": "ผมสวยหรือผมโสด?",
+    "caption": "ของขวัญวันเกิดชิ้นแรก จัดชุดใหญ่ให้เลย ยังไม่ถึงวันเกิดด้วยซ้ำ แถมยังไม่ได้เป็นแฟนกันด้วยซ้ำ",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY532.jpg"
+  },
+  {
+    "day": 543,
+    "date": "9 ส.ค. 68",
+    "title": "LOVEUBABY",
+    "caption": "วงการไปรษณีย์เราก็รับส่งนะ เค้าชอบมากเวลาไปงานพวกนี้แล้วมันมีกิจกรรมอะไรให้ลองเล่น แล้วบี๋เปิดใจลองทำสิ่งใหม่ใหม่",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY543.jpg"
+  },
+  {
+    "day": 546,
+    "date": "12 ส.ค. 68",
+    "title": "มัดใจแม่",
+    "caption": "รูปนี้ถ่ายเมื่อวันแม่ปีที่แล้ว เค้าเอาดอกไม้ไปให้แม่บี๋ แล้วเค้าตั้งใจจะทำแบบนี้ไปทุกปี :)",
+    "stamp": "FINAL APPROACH",
+    "img": "photos/flights/DAY546.jpg"
+  },
+  {
+    "day": 551,
+    "date": "17 ส.ค. 68",
+    "title": "สิ้นสุดทางเพื่อน",
+    "caption": "จากวันแรกมาถึงวันนี้ 551 วัน ในการมัดใจเบบี๋ ในที่สุดเค้าก็ทำสำเร็จ เค้ายังจำความรู้สึกตอนที่ขอเบบี๋เป็นแฟนครั้งแรกได้อยู่เลย มันดีใจ ภูมิใจ และมีความสุขมากๆ ยิ่งได้เห็นรอยยิ้มเบบี๋ตอนที่ตอบตกลง ยิ่งมีความสุขทวีคูณเพิ่มขึ้นไปอีก คิดว่า ในที่สุดเราก็มีโอกาสได้ดูแลผู้หญิงคนนี้แบบเป็นทางการจริงๆสักที 551 วันนี้ไม่ง่ายเลย มีทั้งสุขมาก ทุกข์มาก กันทั้งคู่ แต่เรา 2 คนผ่านมาได้ด้วยกันทั้งหมด และเราจะผ่านมันไปด้วยกันอีกทุกเรื่อง ไม่ว่าทุกข์หรือสุข เราจะเติบโตไปด้วยกัน ตลอดไป…",
+    "stamp": "BOARDED",
+    "img": "photos/flights/DAY551.jpg"
+  }
+];
+let preCards = [];
+let preIdx = 0;
+function esc(s){
+  return String(s||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function syncPreHint(){
+  preHintEl.textContent = `SWIPE · ${preIdx + 1} / ${preDays.length}`;
+}
+function bindCapMore(root){
+  (root || document).querySelectorAll('.cap-box').forEach(box=>{
+    const cap = box.querySelector('.cp-card-cap');
+    const more = box.querySelector('.cap-more');
+    if(!cap || !more) return;
+    box.checkLong = ()=>{
+      if(box.classList.contains('open')) return;
+      box.classList.toggle('long', cap.scrollHeight > cap.clientHeight + 2);
+    };
+    if(box.dataset.bound) return;
+    box.dataset.bound = '1';
+    more.addEventListener('pointerdown', e=> e.stopPropagation());
+    more.onclick = e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      const open = box.classList.toggle('open');
+      more.textContent = open ? 'ย่อ' : 'อ่านต่อ';
+      if(!open) requestAnimationFrame(box.checkLong);
+    };
+  });
+}
+function checkCapMore(root){
+  bindCapMore(root);
+  requestAnimationFrame(()=>{
+    (root || document).querySelectorAll('.cap-box').forEach(box=> box.checkLong && box.checkLong());
+  });
+}
+function renderPreDays(){
+  preTrack.innerHTML = preDays.map((d,i)=>`
+    <div class="pre-card${i===0?' on':''}">
+      <div class="dest-top">
+        <div class="bp-k">DAY</div>
+        <div class="dest-code">${d.day}</div>
+      </div>
+      <div class="cp-card-img${d.img?'':' is-empty'}" style="${d.img?`background-image:url('${d.img}')`:''}"></div>
+      <div class="cp-card-body">
+        <div class="dest-meta">
+          <div>
+            <div class="bp-k">CHAPTER</div>
+            <div class="cp-card-title">${esc(d.title) || '—'}</div>
+          </div>
+          <div>
+            <div class="bp-k">DATE</div>
+            <div class="cp-card-when">${esc(d.date) || '—'}</div>
+          </div>
+        </div>
+        <div class="cap-box">
+          <div class="cp-card-cap">${esc(d.caption)}</div>
+          <button type="button" class="cap-more">อ่านต่อ</button>
+        </div>
+      </div>
+      <div class="dest-bar"></div>
+      <div class="arrived-stamp show">${esc(d.stamp || ('DAY '+d.day))}</div>
+    </div>`).join('');
+  preCards = [...preTrack.querySelectorAll('.pre-card')];
+  preIdx = 0;
+  syncPreHint();
+  checkCapMore(preCards[0]);
+}
+function showPre(i, dir){
+  if(i < 0 || i > preCards.length - 1 || i === preIdx) return;
+  preTrack.dataset.dir = dir > 0 ? 'next' : 'prev';
+  preIdx = i;
+  preCards.forEach((c,idx)=>c.classList.toggle('on', idx===preIdx));
+  syncPreHint();
+  checkCapMore(preCards[preIdx]);
+}
+let preSwipe = null;
+preTrack.addEventListener('pointerdown', e=>{
+  if(e.pointerType === 'mouse' && e.button !== 0) return;
+  if(e.target.closest('.cap-more, .cap-box.open')) return;
+  preSwipe = { x:e.clientX, y:e.clientY, id:e.pointerId };
+});
+preTrack.addEventListener('pointerup', e=>{
+  if(!preSwipe || e.pointerId !== preSwipe.id) return;
+  const dx = e.clientX - preSwipe.x;
+  const dy = e.clientY - preSwipe.y;
+  preSwipe = null;
+  if(Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.15) return;
+  showPre(preIdx + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+});
+preTrack.addEventListener('pointercancel', ()=>{ preSwipe = null; });
+renderPreDays();
+
+/* ---------- slide 1: counter ---------- */
+function renderCounter(){
+  const now = new Date();
+  const days = Math.floor((now - startDate)/86400000);
+  let years = now.getFullYear() - startDate.getFullYear();
+  if(now.getMonth() < startDate.getMonth() || (now.getMonth() === startDate.getMonth() && now.getDate() < startDate.getDate())) years--;
+  years = Math.max(0, years);
+  const dEl = document.getElementById('tcDays');
+  const yEl = document.getElementById('tcYears');
+  if(dEl) dEl.textContent = days.toLocaleString();
+  if(yEl) yEl.textContent = years;
+}
+function countUp(id, target, duration){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const start = performance.now();
+  function tick(now){
+    const t = Math.min((now-start)/duration, 1);
+    const eased = 1 - Math.pow(1-t, 3); // ease-out cubic
+    const val = Math.floor(eased * target);
+    el.textContent = val.toLocaleString();
+    if(t < 1) requestAnimationFrame(tick);
+    else el.textContent = target.toLocaleString();
+  }
+  requestAnimationFrame(tick);
+}
+
+document.querySelector('[data-i="0"]').addEventListener('transitionstart', ()=>{});
+const origShow = show;
+show = function(i){
+  origShow(i);
+  const lockEl = document.getElementById('lock');
+  if(cur===0){
+    lockEl.classList.remove('away');
+    if(lockEl.classList.contains('boarded')) renderCounter();
+  } else if(lockEl.classList.contains('boarded')){
+    lockEl.classList.add('away');
+  }
+  if(cur===2 && window.globeOnShow) globeOnShow();
+  if(cur===3 && window.lottoOnShow) lottoOnShow();
+  if(cur===7 && window.reportOnShow) reportOnShow();
+};
+
+/* ---------- slide 2: 3D globe journey ---------- */
+const checkpoints = [
+  { when:'จุดเริ่มต้น', title:'นครปฐม', caption:'จุดเริ่มต้นที่ประเทศไทย', img:'photos/flights/DAY9.jpg', lat:13.8196, lng:100.0623, code:'NAK' },
+  { when:'15 มี.ค. 68', title:'ฮ่องกง', caption:'ทริปแรกของการเดินทางด้วยกันแค่ 2 คนจริงๆ', img:'photos/hongkong.png', lat:22.3193, lng:114.1694, code:'HKG' },
+  { when:'1 ธ.ค. 68', title:'โตเกียว', caption:'ในที่สุดก็ได้เห็น "ฟูจิ" ด้วยตาจริงๆ', img:'photos/tokyo.png', lat:35.6762, lng:139.6503, code:'TYO' },
+  { when:'19 ม.ค. 69', title:'กวางโจว', caption:'ทริปนี้เราเป็นแก๊งค์ทัวร์จีนกัน', img:'photos/guangzhou.png', lat:23.1291, lng:113.2644, code:'CAN' },
+  { when:'19 มี.ค. 69', title:'เซี่ยงไฮ้', caption:'เค้าทำตามสัญญาว่าจะพามาเซี่ยงไฮ้แล้วนะ', img:'photos/shanghai.png', lat:31.2304, lng:121.4737, code:'SHA' },
+];
+
+function lerp(a,b,t){ return a + (b-a)*t; }
+function tween(duration, onFrame){
+  return new Promise(resolve=>{
+    const start = performance.now();
+    function frame(now){
+      const t = Math.min((now-start)/duration, 1);
+      const eased = t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+      onFrame(eased);
+      if(t<1) requestAnimationFrame(frame); else resolve();
+    }
+    requestAnimationFrame(frame);
+  });
+}
+
+let roadIdx = 0;
+let roadBusy = false;
+const GLOBE_R = 1;
+const WIDE_DIST = 1.78;
+const WIDE_FOV = 54;
+const FLY_ALT = 0.012;
+const FLY_ARC = 0.02;
+const EARTH_TEX = 'https://cdn.jsdelivr.net/npm/three-globe@2.31.1/example/img/earth-blue-marble.jpg';
+
+let globe = {
+  renderer:null, scene:null, camera:null, earth:null, plane:null,
+  markers:[], trails:[], legTrails:[], flightMesh:null, pulse:0
+};
+
+function latLngToVec(lat, lng, r){
+  const phi = (90 - lat) * Math.PI / 180;
+  const theta = (lng + 180) * Math.PI / 180;
+  return new THREE.Vector3(
+    -r * Math.sin(phi) * Math.cos(theta),
+    r * Math.cos(phi),
+    r * Math.sin(phi) * Math.sin(theta)
+  );
+}
+function camPos(lat, lng, dist){
+  return latLngToVec(lat, lng, dist);
+}
+function makeCurve(a, b){
+  const u0 = latLngToVec(a.lat, a.lng, 1).normalize();
+  const u1 = latLngToVec(b.lat, b.lng, 1).normalize();
+  const pts = [];
+  const n = 96;
+  for(let i=0;i<=n;i++){
+    const t = i / n;
+    const u = slerpVec(u0, u1, t);
+    const alt = GLOBE_R + FLY_ALT + FLY_ARC * Math.sin(Math.PI * t);
+    pts.push(u.multiplyScalar(alt));
+  }
+  return new THREE.CatmullRomCurve3(pts);
+}
+function slerpVec(a, b, t){
+  const dot = Math.min(1, Math.max(-1, a.dot(b)));
+  const omega = Math.acos(dot);
+  if(omega < 1e-4) return a.clone().lerp(b, t).normalize();
+  const so = Math.sin(omega);
+  return a.clone().multiplyScalar(Math.sin((1-t)*omega)/so)
+    .add(b.clone().multiplyScalar(Math.sin(t*omega)/so));
+}
+function disposeMesh(mesh){
+  if(!mesh) return;
+  if(mesh.parent) mesh.parent.remove(mesh);
+  if(mesh.geometry) mesh.geometry.dispose();
+}
+
+function makePlane(){
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color:0xf3efe6, metalness:0.35, roughness:0.38, emissive:0x3a3a3a });
+  const body = new THREE.Mesh(new THREE.ConeGeometry(0.013, 0.078, 8), mat);
+  body.rotation.x = Math.PI / 2;
+  const wing = new THREE.Mesh(new THREE.BoxGeometry(0.092, 0.004, 0.026), mat);
+  wing.position.z = 0.008;
+  const tail = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.02, 0.004), mat);
+  tail.position.set(0, 0.01, -0.028);
+  g.add(body, wing, tail);
+  g.scale.setScalar(0.52);
+  return g;
+}
+function updatePlaneScale(){
+  if(globe.plane) globe.plane.scale.setScalar(0.52);
+}
+function orientPlane(pos, tangent){
+  globe.plane.position.copy(pos);
+  globe.plane.up.copy(pos.clone().normalize());
+  globe.plane.lookAt(pos.clone().add(tangent));
+}
+function applyCam(state, fov){
+  globe.camera.position.copy(state.pos);
+  globe.camera.up.copy(state.up);
+  globe.camera.lookAt(state.look);
+  if(fov != null){
+    globe.camera.fov = fov;
+    globe.camera.updateProjectionMatrix();
+  }
+}
+function wideCam(){
+  const lat = checkpoints.reduce((s,c)=>s+c.lat,0) / checkpoints.length;
+  const lng = checkpoints.reduce((s,c)=>s+c.lng,0) / checkpoints.length;
+  return {
+    pos: camPos(lat, lng, WIDE_DIST),
+    look: new THREE.Vector3(0,0,0),
+    up: new THREE.Vector3(0,1,0)
+  };
+}
+
+function makeFollowBlink(){
+  const core = new THREE.Mesh(
+    new THREE.SphereGeometry(0.012, 16, 12),
+    new THREE.MeshStandardMaterial({ color:0x3ee07a, emissive:0x1db954, roughness:0.35, emissiveIntensity:1.1 })
+  );
+  const ring = new THREE.Mesh(
+    new THREE.RingGeometry(0.016, 0.022, 28),
+    new THREE.MeshBasicMaterial({ color:0x3ee07a, transparent:true, opacity:0.7, side:THREE.DoubleSide })
+  );
+  return { core, ring };
+}
+function syncFollowBlink(){
+  if(!globe.followBlink || !globe.plane) return;
+  const pos = globe.plane.position;
+  globe.followBlink.core.position.copy(pos);
+  globe.followBlink.ring.position.copy(pos);
+  globe.followBlink.ring.lookAt(0, 0, 0);
+}
+
+function makeRedPin(){
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({
+    color:0xe23d3d, emissive:0x7a1010, roughness:0.38, metalness:0.12, emissiveIntensity:0.55
+  });
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.006, 12, 10), mat);
+  head.position.y = 0.014;
+  const stem = new THREE.Mesh(new THREE.ConeGeometry(0.004, 0.014, 8), mat);
+  stem.rotation.x = Math.PI;
+  stem.position.y = 0.006;
+  g.add(head, stem);
+  g.visible = false;
+  return g;
+}
+function placePin(pin, lat, lng){
+  const pos = latLngToVec(lat, lng, GLOBE_R + 0.002);
+  pin.position.copy(pos);
+  pin.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), pos.clone().normalize());
+}
+function updateMarkerStates(arrivedIdx){
+  globe.markers.forEach((m, i)=>{
+    m.visible = arrivedIdx > 0 && i <= arrivedIdx;
+  });
+}
+
+function parkPlane(idx){
+  const cp = checkpoints[idx];
+  const p = latLngToVec(cp.lat, cp.lng, GLOBE_R + FLY_ALT);
+  const east = latLngToVec(cp.lat, cp.lng + 0.35, GLOBE_R + FLY_ALT);
+  orientPlane(p, east.sub(p).normalize());
+}
+
+function buildTrailTube(curve, t, color, radius, opacity){
+  const tt = Math.max(0.02, Math.min(1, t));
+  const n = Math.max(4, Math.floor(96 * tt));
+  const pts = [];
+  for(let i=0;i<=n;i++) pts.push(curve.getPoint(tt * i / n));
+  const path = new THREE.CatmullRomCurve3(pts);
+  return new THREE.Mesh(
+    new THREE.TubeGeometry(path, n, radius || 0.0036, 8, false),
+    new THREE.MeshBasicMaterial({ color, transparent:true, opacity: opacity==null ? 0.95 : opacity })
+  );
+}
+
+function setCameraTo(){
+  applyCam(wideCam(), WIDE_FOV);
+}
+
+function showCard(idx){
+  const cp = checkpoints[idx];
+  const card = document.getElementById('cpCard');
+  const img = document.getElementById('cpCardImg');
+  img.classList.toggle('is-empty', !cp.img);
+  img.style.backgroundImage = cp.img ? `url('${cp.img}')` : 'none';
+  document.getElementById('cpCardWhen').textContent = cp.when;
+  document.getElementById('cpCardTitle').textContent = cp.title;
+  document.getElementById('cpCardCap').textContent = cp.caption;
+  document.getElementById('cpCardCode').textContent = cp.code;
+  document.getElementById('cpArrived').classList.toggle('show', idx > 0);
+  document.getElementById('cpArrived').textContent = idx > 0 ? 'ARRIVED' : 'ORIGIN';
+  const capBox = document.getElementById('cpCapBox');
+  capBox.classList.remove('open', 'long');
+  capBox.querySelector('.cap-more').textContent = 'อ่านต่อ';
+  card.classList.add('show');
+  checkCapMore(capBox);
+}
+
+function renderRoadDots(){
+  const wrap = document.getElementById('roadDots');
+  const order = checkpoints.map((_,i)=>i).reverse();
+  wrap.innerHTML = order.map(i=>
+    `<div class="if-leg ${i===roadIdx?'active':''}">${checkpoints[i].code}</div>`
+  ).join('');
+  document.getElementById('roadPrevBtn').disabled = roadIdx<=0;
+  document.getElementById('roadNextBtn').disabled = roadIdx>=checkpoints.length-1;
+}
+
+function globeResize(){
+  if(!globe.renderer) return;
+  const frame = document.getElementById('globeFrame');
+  const w = frame.clientWidth, h = frame.clientHeight;
+  if(w<2 || h<2) return;
+  globe.renderer.setSize(w, h, false);
+  globe.camera.aspect = w / h;
+  globe.camera.updateProjectionMatrix();
+}
+
+function globeOnShow(){
+  globeResize();
+}
+
+function initGlobe(){
+  if(typeof THREE === 'undefined') return;
+  const canvas = document.getElementById('globeCanvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(WIDE_FOV, 1, 0.003, 40);
+
+  scene.add(new THREE.AmbientLight(0x9aa8b2, 0.62));
+  const sun = new THREE.DirectionalLight(0xfff4e8, 1.35);
+  sun.position.set(4, 2.4, 3);
+  scene.add(sun);
+  const fill = new THREE.PointLight(0x8fa3ad, 0.35, 12);
+  fill.position.set(-3, 1, 2);
+  scene.add(fill);
+
+  const starGeo = new THREE.BufferGeometry();
+  const starPos = [];
+  for(let i=0;i<700;i++){
+    const v = new THREE.Vector3().randomDirection().multiplyScalar(10 + Math.random()*12);
+    starPos.push(v.x, v.y, v.z);
+  }
+  starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+  scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color:0xb9c4ca, size:0.03 })));
+
+  const earthGroup = new THREE.Group();
+  scene.add(earthGroup);
+
+  const globeMat = new THREE.MeshStandardMaterial({
+    color:0x2c4a5c, roughness:0.85, metalness:0.08
+  });
+  const earth = new THREE.Mesh(new THREE.SphereGeometry(GLOBE_R, 128, 96), globeMat);
+  earthGroup.add(earth);
+  new THREE.TextureLoader().load(EARTH_TEX, tex=>{
+    tex.colorSpace = THREE.SRGBColorSpace;
+    globeMat.map = tex;
+    globeMat.color.set(0xffffff);
+    globeMat.needsUpdate = true;
+  });
+
+  const grid = new THREE.Mesh(
+    new THREE.SphereGeometry(GLOBE_R * 1.003, 32, 16),
+    new THREE.MeshBasicMaterial({ color:0x8fa3ad, wireframe:true, transparent:true, opacity:0.07 })
+  );
+  earthGroup.add(grid);
+
+  const atmos = new THREE.Mesh(
+    new THREE.SphereGeometry(GLOBE_R * 1.014, 48, 32),
+    new THREE.MeshBasicMaterial({ color:0x6a8aaa, transparent:true, opacity:0.12, side:THREE.BackSide })
+  );
+  earthGroup.add(atmos);
+
+  const markers = checkpoints.map(cp=>{
+    const pin = makeRedPin();
+    placePin(pin, cp.lat, cp.lng);
+    earthGroup.add(pin);
+    return pin;
+  });
+
+  const plane = makePlane();
+  earthGroup.add(plane);
+  const followBlink = makeFollowBlink();
+  earthGroup.add(followBlink.core);
+  earthGroup.add(followBlink.ring);
+
+  globe = { renderer, scene, camera, earth:earthGroup, plane, markers, trails:[], legTrails:[], flightMesh:null, pulse:0, followBlink };
+
+  window.addEventListener('resize', globeResize);
+  new ResizeObserver(globeResize).observe(document.getElementById('globeFrame'));
+
+  updateMarkerStates(0);
+  parkPlane(0);
+  setCameraTo();
+  showCard(0);
+  renderRoadDots();
+  globeResize();
+
+  (function loop(){
+    requestAnimationFrame(loop);
+    globe.pulse += 0.07;
+    updatePlaneScale();
+    syncFollowBlink();
+    if(globe.followBlink){
+      const k = 0.5 + 0.5 * Math.sin(globe.pulse);
+      const fb = globe.followBlink;
+      fb.core.material.emissive.setRGB(0.08, 0.35 + 0.75*k, 0.18);
+      fb.core.material.emissiveIntensity = 0.7 + 1.4*k;
+      fb.core.material.color.setRGB(0.12, 0.55 + 0.4*k, 0.28);
+      const s = 1 + k * 0.7;
+      fb.ring.scale.set(s, s, s);
+      fb.ring.material.opacity = 0.25 + 0.7*k;
+    }
+    globe.renderer.render(globe.scene, globe.camera);
+  })();
+}
+
+async function roadStep(delta){
+  if(roadBusy || !globe.renderer) return;
+  const target = roadIdx + delta;
+  if(target < 0 || target > checkpoints.length-1) return;
+  roadBusy = true;
+
+  const card = document.getElementById('cpCard');
+  card.classList.remove('show');
+  await tween(180, ()=>{});
+
+  const forward = delta > 0;
+  const legIdx = Math.min(roadIdx, target);
+  if(!forward) updateMarkerStates(target);
+  const curve = makeCurve(checkpoints[legIdx], checkpoints[legIdx + 1]);
+  const dir = forward ? 1 : -1;
+  const tStart = forward ? 0 : 1;
+  orientPlane(curve.getPoint(tStart), curve.getTangent(tStart).multiplyScalar(dir));
+  applyCam(wideCam(), WIDE_FOV);
+
+  if(globe.legTrails[legIdx]){
+    globe.flightMesh = globe.legTrails[legIdx];
+    globe.legTrails[legIdx] = null;
+  }
+
+  await tween(2200, e=>{
+    const t = forward ? e : 1 - e;
+    const pos = curve.getPoint(t);
+    const tan = curve.getTangent(t).multiplyScalar(dir);
+    orientPlane(pos, tan);
+    disposeMesh(globe.flightMesh);
+    globe.flightMesh = null;
+    if(t > 0.02){
+      globe.flightMesh = buildTrailTube(curve, t, 0xffffff, 0.0038, 1);
+      globe.earth.add(globe.flightMesh);
+    }
+  });
+
+  if(forward && globe.flightMesh){
+    globe.legTrails[legIdx] = globe.flightMesh;
+    globe.flightMesh = null;
+  } else {
+    disposeMesh(globe.flightMesh);
+    globe.flightMesh = null;
+  }
+
+  if(forward) updateMarkerStates(target);
+  parkPlane(target);
+  orientPlane(
+    latLngToVec(checkpoints[target].lat, checkpoints[target].lng, GLOBE_R + FLY_ALT),
+    curve.getTangent(forward ? 1 : 0).multiplyScalar(dir)
+  );
+  applyCam(wideCam(), WIDE_FOV);
+
+  roadIdx = target;
+  showCard(roadIdx);
+  renderRoadDots();
+  roadBusy = false;
+}
+
+if(typeof THREE !== 'undefined') initGlobe();
+else {
+  renderRoadDots();
+  showCard(0);
+}
+
+/* ---------- slide 3: cabin lottery scratch ---------- */
+const lottoLuckyNums = ['17','08'];
+const lottoPrizes = [
+  { n:'42', p:'เลือกเมนูเย็นนี้' },
+  { n:'17', p:'กอดฟรีทั้งวัน' },
+  { n:'63', p:'นวดไหล่ 5 นาที' },
+  { n:'08', p:'จูบ 1 ครั้ง' },
+  { n:'91', p:'ไม่ต้องล้างจาน 1 มื้อ' },
+  { n:'25', p:'เค้ก 1 ชิ้น' },
+  { n:'33', p:'กาแฟฟรี 1 แก้ว' },
+  { n:'54', p:'เดินเล่นด้วยกัน' },
+  { n:'70', p:'ขอเพลงได้ 1 เพลง' },
+  { n:'11', p:'คำชม 3 ประโยค' },
+  { n:'86', p:'ถ่ายรูป 10 รูป' },
+  { n:'26', p:'ทริปสั้น 1 วัน' },
+  { n:'39', p:'ได้ของเล็กน้อย' },
+  { n:'04', p:'ดูซีรีส์เรื่องที่อยากดู' },
+  { n:'51', p:'นวดหัว 3 นาที' },
+  { n:'72', p:'เลือกหนังดูด้วยกัน' },
+  { n:'19', p:'ไอศกรีม 1 ลูก' },
+  { n:'60', p:'ไม่บ่น 1 วัน' },
+  { n:'83', p:'กอดจากหลัง' },
+  { n:'14', p:'ข้อความน่ารัก 1 ข้อ' },
+];
+let lottoReady = false;
+let lottoLuckyOpen = 0;
+let lottoWins = [];
+function paintFoil(canvas){
+  const r = canvas.getBoundingClientRect();
+  if(r.width < 4 || r.height < 4) return false;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.round(r.width * dpr);
+  canvas.height = Math.round(r.height * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const g = ctx.createLinearGradient(0,0,r.width,r.height);
+  g.addColorStop(0,'#8d969c');
+  g.addColorStop(.45,'#d5d8da');
+  g.addColorStop(1,'#7d868c');
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,r.width,r.height);
+  ctx.fillStyle = 'rgba(255,255,255,.22)';
+  ctx.font = '700 9px DejaVu Sans, Arial, sans-serif';
+  ctx.letterSpacing = '0.12em';
+  for(let y=10;y<r.height;y+=16){
+    ctx.fillText('SK1708  SCRATCH', 6, y);
+  }
+  return true;
+}
+function bindScratch(canvas, onOpen){
+  const ctx = canvas.getContext('2d');
+  let down = false, opened = false;
+  function pos(e){
+    const r = canvas.getBoundingClientRect();
+    return { x:e.clientX - r.left, y:e.clientY - r.top };
+  }
+  function rub(e){
+    if(!down || opened) return;
+    const {x,y} = pos(e);
+    const r = canvas.getBoundingClientRect();
+    ctx.save();
+    ctx.setTransform((canvas.width/r.width),0,0,(canvas.height/r.height),0,0);
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, 16, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+    const img = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    let clear = 0, total = 0;
+    for(let i=3;i<img.length;i+=32){ total++; if(img[i] < 24) clear++; }
+    if(total && clear/total > 0.48){
+      opened = true;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      canvas.style.pointerEvents = 'none';
+      onOpen();
+    }
+  }
+  canvas.addEventListener('pointerdown', e=>{
+    e.preventDefault();
+    canvas.setPointerCapture(e.pointerId);
+    down = true;
+    rub(e);
+  });
+  canvas.addEventListener('pointermove', e=>{
+    e.preventDefault();
+    rub(e);
+  });
+  canvas.addEventListener('pointerup', ()=>{ down = false; });
+  canvas.addEventListener('pointercancel', ()=>{ down = false; });
+}
+function unlockLottoGrid(){
+  const grid = document.getElementById('lottoGrid');
+  grid.classList.remove('locked');
+  grid.querySelectorAll('canvas').forEach(cv=> cv.style.pointerEvents = '');
+  document.getElementById('lottoStatus').textContent = 'ขูดช่องรางวัล ถ้าเลขตรงกับเลขนำโชค = ได้รางวัล';
+}
+function markLottoWin(cell, prize){
+  cell.classList.add('win');
+  lottoWins.push(prize);
+  document.getElementById('lottoStatus').textContent = 'ถูกรางวัล: ' + lottoWins.join(' · ');
+}
+function lottoOnShow(){
+  if(lottoReady) return;
+  const luckyWrap = document.getElementById('lottoLucky');
+  const gridWrap = document.getElementById('lottoGrid');
+  luckyWrap.innerHTML = lottoLuckyNums.map(n=>`
+    <div class="lotto-cell">
+      <div class="lotto-num">${n}</div>
+      <canvas></canvas>
+    </div>`).join('');
+  gridWrap.innerHTML = lottoPrizes.map(it=>`
+    <div class="lotto-cell" data-n="${it.n}">
+      <div class="lotto-num">${it.n}</div>
+      <div class="lotto-prize">${it.p}</div>
+      <canvas></canvas>
+    </div>`).join('');
+  requestAnimationFrame(()=>{
+    const paintAll = ()=>{
+      let ok = true;
+      luckyWrap.querySelectorAll('.lotto-cell').forEach(cell=>{
+        if(cell.dataset.ready) return;
+        const cv = cell.querySelector('canvas');
+        if(!paintFoil(cv)){ ok = false; return; }
+        cell.dataset.ready = '1';
+        bindScratch(cv, ()=>{
+          lottoLuckyOpen++;
+          if(lottoLuckyOpen >= lottoLuckyNums.length) unlockLottoGrid();
+          else document.getElementById('lottoStatus').textContent = 'ขูดเลขนำโชคอีก ' + (lottoLuckyNums.length - lottoLuckyOpen) + ' ชุด';
+        });
+      });
+      gridWrap.querySelectorAll('.lotto-cell').forEach(cell=>{
+        if(cell.dataset.ready) return;
+        const cv = cell.querySelector('canvas');
+        if(!paintFoil(cv)){ ok = false; return; }
+        cell.dataset.ready = '1';
+        cv.style.pointerEvents = 'none';
+        bindScratch(cv, ()=>{
+          const n = cell.dataset.n;
+          const prize = cell.querySelector('.lotto-prize').textContent;
+          if(lottoLuckyNums.includes(n)) markLottoWin(cell, prize);
+        });
+      });
+      if(!ok) requestAnimationFrame(paintAll);
+      else lottoReady = true;
+    };
+    paintAll();
+  });
+}
+
+/* ---------- slide 4: cabin psych ---------- */
+const quizData = [
+  { q:'ถ้าเลือกสัมภาระขึ้นเครื่องได้เพียง 1 ชิ้น คุณจะเอาอะไร?', opts:[
+    { t:'ยาสามัญกับของจำเป็น', s:1 },
+    { t:'เสื้อตัวโปรดที่ใส่แล้วอบอุ่น', s:2 },
+    { t:'จดหมายหรือรูปที่พกไว้ด้วยกัน', s:3 },
+    { t:'กล้องไปเก็บทุกโมเมนต์', s:4 },
+  ]},
+  { q:'นั่งตรงไหนบนเครื่องแล้วรู้สึกที่สุด?', opts:[
+    { t:'ริมทางเดิน ลุกง่าย เป็นที่พึ่ง', s:1 },
+    { t:'ตรงกลาง ติดกันตลอดทาง', s:2 },
+    { t:'ริมหน้าต่าง ดูเมฆด้วยกัน', s:3 },
+    { t:'ที่ไหนก็ได้ ขอแค่ได้นั่งข้างกัน', s:4 },
+  ]},
+  { q:'ไฟลต์ดีเลย์ 3 ชั่วโมง สองคนจะทำอะไร?', opts:[
+    { t:'เช็กตารางใหม่ให้เรียบร้อย', s:1 },
+    { t:'หากาแฟมานั่งคุยกันยาวๆ', s:2 },
+    { t:'เดินเกทถ่ายรูปเล่น', s:3 },
+    { t:'เปลี่ยนแผนเที่ยวให้สนุกกว่าเดิม', s:4 },
+  ]},
+  { q:'ของว่างบนเครื่องชิ้นไหนเป็นคุณที่สุด?', opts:[
+    { t:'น้ำเปล่า เรียบง่ายพอ', s:1 },
+    { t:'ชาอุ่นๆ ดูแลตัวเองและอีกคน', s:2 },
+    { t:'ของหวานชิ้นเล็ก โรแมนติกเบาๆ', s:3 },
+    { t:'อะไรก็ได้ ขอแบ่งกันกิน', s:4 },
+  ]},
+  { q:'เครื่องเริ่มลดระดับ คุณคิดอะไรก่อน?', opts:[
+    { t:'กระเป๋าครบไหม ลงจอดปลอดภัยไหม', s:1 },
+    { t:'อีกคนพักผ่อนพอไหม', s:2 },
+    { t:'เมืองข้างล่างสวยจัง', s:3 },
+    { t:'ทริปนี้จะจำไปอีกนาน', s:4 },
+  ]},
+  { q:'ถ้าเลือกไฟลต์ไปด้วยกัน คุณชอบแบบไหน?', opts:[
+    { t:'ตรง ตรงเวลา ไม่เสี่ยงพลาดต่อ', s:1 },
+    { t:'มี layover สั้นๆ พักหายใจด้วยกัน', s:2 },
+    { t:'ไฟลต์เช้า ดูพระอาทิตย์ขึ้นบนฟ้า', s:3 },
+    { t:'ไฟลต์กลางคืน นอนพิงไหล่กัน', s:4 },
+  ]},
+  { q:'เจอหลุมอากาศ คุณจะทำยังไง?', opts:[
+    { t:'ฟังประกาศลูกเรือให้ครบ', s:1 },
+    { t:'จับมืออีกคนไว้เบาๆ', s:2 },
+    { t:'หัวเราะกลบแล้วแอบเข้าใกล้', s:3 },
+    { t:'บอกว่าผ่านไปด้วยกันได้แน่', s:4 },
+  ]},
+  { q:'ที่ duty free จะหยิบอะไรเป็นของคู่?', opts:[
+    { t:'ของใช้ที่จำเป็นจริงๆ', s:1 },
+    { t:'ขนมหรือชาให้กินด้วยกัน', s:2 },
+    { t:'น้ำหอมหรือของที่จำทริปนี้ได้', s:3 },
+    { t:'อะไรก็ได้ที่อีกคนยิ้ม', s:4 },
+  ]},
+  { q:'เพลงตอนเครื่องทะยาน คุณอยากได้โทนไหน?', opts:[
+    { t:'เพลงชิลล์ ไม่ต้องคิดมาก', s:1 },
+    { t:'เพลงที่เคยฟังด้วยกัน', s:2 },
+    { t:'เพลงช้า เหมือนฉากหนัง', s:3 },
+    { t:'เพลงที่ยังไม่มีในเพลย์ลิสต์ — ของใหม่ด้วยกัน', s:4 },
+  ]},
+  { q:'ถ้ามีตั๋วไปที่ไหนก็ได้หนึ่งใบ สองคนจะไปไหน?', opts:[
+    { t:'ที่เคยไป รู้ทาง อุ่นใจ', s:1 },
+    { t:'เมืองเล็กๆ นั่งคาเฟ่ยาวๆ', s:2 },
+    { t:'เมืองไฟสวย เดินกลางคืนด้วยกัน', s:3 },
+    { t:'ที่ยังไม่เคยคิดว่าจะถึง', s:4 },
+  ]},
+];
+const quizResults = [
+  { min:10, max:17, title:'WINDOW SEAT, STEADY HEART',
+    text:'คุณเป็นคู่บินที่มั่นคง ชอบความปลอดภัยและแผนที่ชัด อนาคตร่วมกันคือไฟลต์ตรง ไม่หวือหวา แต่ถึงที่หมายทุกครั้ง เพราะเลือกกันด้วยความตั้งใจ' },
+  { min:18, max:24, title:'CO-PILOT OF CARE',
+    text:'คุณดูแลกันเหมือนลูกเรือที่คอยเช็กเข็มขัดตลอดทาง อนาคตร่วมกันอบอุ่น มีคนคอยถามว่าพักพอไหม ความรักแบบนี้ทำให้ทุก layover ไม่เหงา' },
+  { min:25, max:32, title:'FIRST CLASS HEART',
+    text:'คุณเก็บโมเมนต์เล็กๆ บนฟ้าได้หมด อนาคตร่วมกันจะเต็มไปด้วยรูป เมฆ และเรื่องที่เล่าซ้ำแล้วยังยิ้ม ความรักของคุณคือไฟลต์ที่วิวสวยตลอดทาง' },
+  { min:33, max:40, title:'NOW → FUT, NO RETURN',
+    text:'คุณพร้อมทะยานไปที่ที่ไม่เคยแผน อนาคตร่วมกันคือตั๋วใบต่อไปเสมอ แม้เจอหลุมอากาศก็จับมือแล้วไปต่อ ไฟลต์นี้ห้ามคืน ห้ามขายต่อ' },
+];
+let qIdx=0, score=0;
+function renderQuiz(){
+  if(qIdx>=quizData.length){
+    const r = quizResults.find(x=> score>=x.min && score<=x.max) || quizResults[quizResults.length-1];
+    document.getElementById('quizQ').textContent = r.title;
+    document.getElementById('quizOpts').innerHTML = `<div class="quiz-result">${r.text}</div>`;
+    document.getElementById('quizScore').textContent = `SCORE: ${score} / 40 · PROFILE COMPLETE`;
+    return;
+  }
+  const item = quizData[qIdx];
+  document.getElementById('quizQ').textContent = `Q${qIdx+1}: ${item.q}`;
+  document.getElementById('quizOpts').innerHTML = item.opts.map((o,i)=>
+    `<button class="quiz-opt" onclick="answerQuiz(this,${i})"><span class="ife-k">GATE ${String.fromCharCode(65+i)}</span><br>${o.t}</button>`
+  ).join('');
+  document.getElementById('quizScore').textContent = `SCORE: ${score} · Q ${qIdx+1} / 10`;
+}
+function answerQuiz(btn, i){
+  const item = quizData[qIdx];
+  document.querySelectorAll('.quiz-opt').forEach(o=>o.onclick=null);
+  btn.classList.add('picked');
+  score += item.opts[i].s;
+  setTimeout(()=>{ qIdx++; renderQuiz(); }, 450);
+}
+renderQuiz();
+
+/* ---------- slide 5: duty free ---------- */
+const dutyItems = [
+  { id:'perfume', sku:'DF-17', name:'Cabin No.17', desc:'น้ำหอมติดตัว', tag:'romance',
+    note:'กลิ่นนี้จะจำทริปนี้ได้แม้ลงจอดแล้ว' },
+  { id:'letter', sku:'DF-08', name:'Sky Letter', desc:'จดหมายบนฟ้า', tag:'romance',
+    note:'เขียนถึงอนาคต เปิดอ่านตอนปีหน้า' },
+  { id:'choco', sku:'DF-22', name:'Twin Cocoa', desc:'ช็อกโกแลตคู่', tag:'care',
+    note:'ของหวานที่แบ่งกันไม่หมด' },
+  { id:'tea', sku:'DF-31', name:'Two Cups', desc:'ชาอุ่นสองถ้วย', tag:'care',
+    note:'มีคนคอยถามตลอดทางว่าดื่มยัง' },
+  { id:'key', sku:'DF-HKG', name:'City Charm', desc:'พวงกุญแจเมือง', tag:'memory',
+    note:'ทริปแรกแค่สองคน พกไว้ที่กระเป๋า' },
+  { id:'cam', sku:'DF-35', name:'Disposable', desc:'กล้องใช้แล้วทิ้ง', tag:'memory',
+    note:'เก็บโมเมนต์ที่ไม่ต้องโพสต์' },
+  { id:'ticket', sku:'DF-FUT', name:'Open Ticket', desc:'ตั๋วใบต่อไป', tag:'future',
+    note:'ไฟลต์นี้จบแล้ว แต่ยังมีขาต่อไป' },
+  { id:'band', sku:'DF-SK', name:'SK1708 Band', desc:'สายข้อมือไฟลต์', tag:'future',
+    note:'ผูกไว้ด้วยกันจนถึงเกท FUT' },
+];
+const dutyBag = [];
+function dutyFortune(picks){
+  const n = {};
+  picks.forEach(p=> n[p.tag] = (n[p.tag]||0)+1);
+  const top = Object.entries(n).sort((a,b)=>b[1]-a[1])[0];
+  if(top[1]===3){
+    return {
+      romance: { t:'FIRST CLASS SCENT', x:'ตะกร้านี้เต็มไปด้วยของที่ทำให้จำกันได้ด้วยกลิ่นและคำสัญญา อนาคตร่วมกันจะโรแมนติกแบบไม่ต้องประกาศ' },
+      care:    { t:'CO-PILOT OF CARE', x:'เลือกของที่ทำให้ทั้งคู่อยู่สบาย อนาคตคือการดูแลกันทุกไฟลต์ ไม่ต้องรอหลุมอากาศถึงจะจับมือ' },
+      memory:  { t:'KEEP THE BOARDING STUB', x:'คุณเก็บโมเมนต์ไว้เป็นหลักฐาน อนาคตร่วมกันจะมีเรื่องเล่าซ้ำแล้วยังยิ้ม แม้ลงจอดแล้วก็ยังพกทริปนี้ไว้' },
+      future:  { t:'NOW → FUT, OPEN JAW', x:'ตะกร้านี้คือตั๋วใบต่อไปทั้งใบ คุณยังไม่ยอมให้ไฟลต์นี้เป็นขาสุดท้าย' },
+    }[top[0]];
+  }
+  if(top[1]===2){
+    return {
+      romance: { t:'WINDOW SEAT, SOFT LIGHT', x:'แกนของตะกร้าคือความโรแมนติก อีกชิ้นทำให้ไม่ลอยเกินไป — คู่ที่ทั้งฝัน ทั้งลงจอดเป็น' },
+      care:    { t:'BLANKET, TWO CUPS', x:'คุณเลือกของที่อุ่นก่อน อนาคตร่วมกันคือคนที่คอยเช็กว่าพักพอไหม แม้ตอนทะยาน' },
+      memory:  { t:'STAMPED, NOT FORGOTTEN', x:'ของส่วนใหญ่คือความทรงจำ อีกชิ้นคือสิ่งที่จะพกต่อไป — ทริปนี้จะไม่จบที่กระเป๋า' },
+      future:  { t:'NEXT SECTOR CLEARED', x:'คุณมองไปข้างหน้าชัด อีกชิ้นคือของที่จำวันนี้ได้ ไฟลต์ต่อไปเลยมีต้นทาง' },
+    }[top[0]];
+  }
+  return { t:'BALANCED CART', x:'เลือกได้ทั้งจำ ทั้งดูแล ทั้งไปต่อ ตะกร้านี้คือไฟลต์ที่ครบทุกอย่างก่อนถึงเกท FUT' };
+}
+function renderDuty(){
+  const done = dutyBag.length>=3;
+  document.getElementById('dfSub').textContent = done
+    ? 'ใบเสร็จออกแล้ว · TAX FREE'
+    : 'เลือกของ 3 ชิ้นก่อนลงเครื่อง';
+  if(done){
+    const picks = dutyBag.map(id=>dutyItems.find(x=>x.id===id));
+    const r = dutyFortune(picks);
+    document.getElementById('dfBody').innerHTML = `
+      <div class="df-receipt">
+        <div class="df-rc-top">
+          <div>
+            <div class="ife-k">ANNIVERSARY AIR</div>
+            <div class="df-rc-name">DUTY FREE</div>
+          </div>
+          <div class="ife-k">SK1708 · 17 AUG 26</div>
+        </div>
+        <hr class="df-dash">
+        ${picks.map(p=>`<div class="df-line"><span>${p.name}<br><span class="df-note">${p.note}</span></span><span>${p.sku}</span></div>`).join('')}
+        <hr class="df-dash">
+        <div class="ife-k">${r.t}</div>
+        <div class="df-forecast">${r.x}</div>
+        <hr class="df-dash">
+        <div class="ife-k">PAID · SEE YOU AT GATE FUT</div>
+      </div>`;
+    document.getElementById('dfStatus').textContent = 'RECEIPT PRINTED · QTY 3';
+    return;
+  }
+  document.getElementById('dfBody').innerHTML =
+    `<div class="df-shop">${dutyItems.map(it=>{
+      const on = dutyBag.includes(it.id);
+      const dim = !on && dutyBag.length>=3;
+      return `<button class="df-item${on?' on':''}${dim?' dim':''}" onclick="pickDuty('${it.id}')">
+        <span class="ife-k">${it.sku}${on?' · IN BAG':''}</span>
+        <b>${it.name}</b>
+        <em>${it.desc}</em>
+      </button>`;
+    }).join('')}</div>`;
+  document.getElementById('dfStatus').textContent = `BAG: ${dutyBag.length} / 3`;
+}
+function pickDuty(id){
+  if(dutyBag.length>=3) return;
+  const i = dutyBag.indexOf(id);
+  if(i>=0) dutyBag.splice(i,1);
+  else dutyBag.push(id);
+  renderDuty();
+}
+renderDuty();
+
+/* ---------- slide 7: flight report ---------- */
+function rptLine(k, v, d){
+  return `<div class="rpt-row"><span><div class="rpt-k">${k}</div></span><span><div class="rpt-v">${v}</div>${d?`<div class="rpt-d">${d}</div>`:''}</span></div>`;
+}
+function renderReport(){
+  const quizDone = qIdx >= quizData.length;
+  const quiz = quizDone
+    ? (quizResults.find(x=> score>=x.min && score<=x.max) || quizResults[quizResults.length-1])
+    : null;
+  const dutyDone = dutyBag.length >= 3;
+  const dutyPicks = dutyDone ? dutyBag.map(id=>dutyItems.find(x=>x.id===id)) : [];
+  const duty = dutyDone ? dutyFortune(dutyPicks) : null;
+  const el = document.getElementById('rptBody');
+  if(!el) return;
+  el.innerHTML = `
+    ${rptLine('CONNECTING FLIGHTS', '551 วัน', 'ก่อนเป็นแฟน')}
+    ${rptLine('IN-FLIGHT MAP', 'HKG · TYO · CAN · SHA', 'บินด้วยกัน')}
+    ${rptLine('CABIN LOTTERY', lottoWins.length ? lottoWins.join(' · ') : 'ยังไม่ขูด', lottoWins.length ? lottoWins.length + ' PRIZE' : '—')}
+    ${rptLine('PASSENGER INTERVIEW', quiz ? quiz.title : 'ยังไม่สัมภาษณ์', quiz ? 'SCORE ' + score + ' / 40' : '—')}
+    ${rptLine('DUTY FREE', duty ? duty.t : 'ยังไม่เลือก', dutyDone ? dutyPicks.map(p=>p.name).join(' · ') : '—')}
+    ${rptLine('ARRIVED', 'GATE FUT', '17 AUG 26')}
+    <hr class="df-dash">
+    <div class="rpt-next">
+      <div class="rpt-k">NEXT SECTOR · OPEN TICKET</div>
+      <div class="rpt-route">
+        <div>
+          <div class="rpt-k">FROM</div>
+          <div class="dest-code">NOW</div>
+        </div>
+        <div class="rpt-plane">✈</div>
+        <div class="rpt-to">
+          <div class="rpt-k">TO</div>
+          <div class="dest-code">FUT</div>
+        </div>
+      </div>
+      <div class="rpt-d">SK1708 · 17 AUG 27 · ที่นั่งคู่ใบนี้เปิดไว้แล้ว ห้ามเปลี่ยนที่นั่ง</div>
+    </div>
+    <hr class="df-dash">
+    <div class="rpt-k">FROM THE FLIGHT DECK</div>
+    <div class="rpt-letter">ผู้โดยสาร Salisa และ Krittaphart ไฟลต์ SK1708 จากปัจจุบันสู่อนาคตลงจอดแล้ว ขอบคุณที่นั่งข้างกันตั้งแต่วันแรก และเดินทางด้วยกันมา ทั้งทริปฮ่องกง โตเกียว กวางโจว เซี่ยงไฮ้ ปีหน้าเปิดไฟลต์นี้อีกรอบ ในชื่อเดิม ไม่คืนตั๋ว ผู้โดยสารทั้งคู่สามารถเลือกปลายทาง แล้วจองที่พักได้เลย</div>
+    <hr class="df-dash">
+    <div class="rpt-k">SEE YOU ON SK1708 · NEXT YEAR</div>`;
+}
+window.reportOnShow = renderReport;
+
+/* ---------- slide 6: surprise ---------- */
+function surprise(){
+  const btn = document.getElementById('surpriseBtn');
+  if(btn.classList.contains('claimed')) return;
+  btn.classList.add('claimed');
+  btn.textContent = 'CLAIMED';
+  const msg = document.getElementById('hiddenMsg');
+  if(lottoWins.length){
+    msg.textContent = 'รางวัลจาก Cabin Lottery: ' + lottoWins.join(' · ') + ' — ติดต่อเบบี๋ของคุณเพื่อขอรับสิทธิ์ได้ทันที';
+  } else {
+    msg.textContent = 'ยังไม่มีรางวัลจาก Cabin Lottery — ลองขูดหวยบนเครื่องก่อนนะ';
+  }
+  msg.classList.add('show');
+  burstConfetti();
+}
+function burstConfetti(){
+  const colors = ['#8fa3ad','#d3d3d3','#ffffff'];
+  for(let i=0;i<40;i++){
+    const p = document.createElement('div');
+    p.className='confetti';
+    p.style.left = Math.random()*100+'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+    document.body.appendChild(p);
+    const dur = 2+Math.random()*2;
+    p.animate([
+      { transform:'translateY(0) rotate(0deg)', opacity:1 },
+      { transform:`translateY(100vh) rotate(${360+Math.random()*360}deg)`, opacity:0.9 }
+    ], { duration:dur*1000, easing:'ease-in' });
+    setTimeout(()=>p.remove(), dur*1000);
+  }
+}
+</script>
+</body>
+</html>
